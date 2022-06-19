@@ -1,6 +1,6 @@
 import { Table, Model, Column, DataType } from 'sequelize-typescript';
 
-@Table({ tableName: 'r1022', timestamps: false })
+@Table({ tableName: 'r1022', schema: 'public', timestamps: false })
 export class Region extends Model<Region> {
   @Column({
     type: DataType.STRING(11),

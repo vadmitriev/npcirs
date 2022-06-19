@@ -1,3 +1,4 @@
+import { Organization } from 'src/modules/organization/organization.entity';
 import { Region } from 'src/modules/regions/region.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { User } from 'src/modules/users/user.entity';
@@ -23,7 +24,7 @@ export const databaseProviders = [
           config = databaseConfig.development;
       }
       const sequelize = new Sequelize(config);
-      sequelize.addModels([User, Region]);
+      sequelize.addModels([User, Region, Organization]);
       await sequelize.sync();
       return sequelize;
     },

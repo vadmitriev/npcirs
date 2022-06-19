@@ -7,6 +7,8 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RegionsService } from './modules/regions/regions.service';
 import { RegionsModule } from './modules/regions/regions.module';
+import { OrganizationService } from './modules/organization/organization.service';
+import { OrganizationModule } from './modules/organization/organization.module';
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { RegionsModule } from './modules/regions/regions.module';
     UsersModule,
     AuthModule,
     RegionsModule,
+    OrganizationModule,
   ],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

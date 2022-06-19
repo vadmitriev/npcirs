@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { RegionsService } from './regions.service';
-import { regionProviders } from './regions.providers';
+import { regionsProviders } from './regions.providers';
 import { RegionsController } from './regions.controller';
 
 @Module({
-  providers: [RegionsService, ...regionProviders],
+  providers: [RegionsService, ...regionsProviders],
   exports: [RegionsService],
   controllers: [RegionsController],
 })
