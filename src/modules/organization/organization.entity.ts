@@ -4,7 +4,6 @@ import {
   Column,
   DataType,
   ForeignKey,
-  Index,
   BelongsTo,
 } from 'sequelize-typescript';
 import { Region } from '../regions/region.entity';
