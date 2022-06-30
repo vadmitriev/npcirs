@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src/",
+    "paths": {
+      "api": ["src/api/*"],
+      "components": ["src/components/*"],
+      "constants": ["src/constants/*"],
+      "hooks": ["src/hooks/*"],
+      "layouts": ["src/layouts/*"],
+      "pages": ["src/pages/*"],
+      "routes": ["src/routes/*"]
+    }
+  },
+  "exclude": ["node_modules", "**/node_modules"],
+  "include": ["src/**/*.js"]
+}
