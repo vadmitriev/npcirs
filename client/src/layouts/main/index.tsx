@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import ErrorBoundary from 'components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
-const MainLayout = () => {
+const MainLayout: React.FC = () => {
   return (
     <ErrorBoundary>
       <Outlet />

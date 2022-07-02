@@ -7,16 +7,16 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { MainLayout } from 'layouts';
+import { MainLayout } from '@/layouts';
 
 import {
   DashboardPage,
   LoginPage,
   SignUpPage,
   NotFoundPage,
-} from 'pages';
+} from '@/pages';
 
-import { useAuth } from 'hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 function RequireAuth() {
   const auth = useAuth();
@@ -39,7 +39,10 @@ const Router = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Route>
-      <Route path="*" element={<NotFoundPage />} />
+      <Route
+        path="*"
+        element={<NotFoundPage text="Страница не найдена" />}
+      />
     </Routes>
   );
 };

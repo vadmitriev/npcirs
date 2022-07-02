@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from 'hooks/useAuth';
+import { AuthProvider } from '@/hooks/useAuth';
 
-import Router from 'routes';
+import Router from '@/routes';
 
-function App() {
+const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -12,7 +12,7 @@ function App() {
       </AuthProvider>
     </BrowserRouter>
   );
-}
+};
 
 // import React, { Component } from 'react';
 // import { ExtGrid } from '@sencha/ext-react-modern';

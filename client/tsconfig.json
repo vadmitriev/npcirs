@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "target": "ESNext",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": false,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "removeComments": true,
+    "strictNullChecks": false,
+    "outDir": "build",
+    "lib": ["es6", "es7", "dom"],
+    "types": ["node"],
+    "allowJs": false,
+    "strict": true,
+    "paths": {
+      "@/*": ["./src/*", "./dist/*"]
+    }
+  },
+  "include": ["./src"],
+
+  "files": ["modern.d.ts"],
+  "exclude": ["dist", "build", "node_modules"]
+}
