@@ -1,133 +1,127 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import {
-  Panel,
-  Container,
-  FormPanel,
-  PasswordField,
-  FieldSet,
-  TextField,
-  TreeList,
-  TitleBar,
+  Tab,
+  Grid,
+  Header,
+  Form,
+  Segment,
   Button,
-  Sheet,
-} from '@sencha/ext-react-modern';
+  Message,
+  Menu,
+  Container,
+  Image,
+  Dropdown,
+} from 'semantic-ui-react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
-
-import { medium, large } from '../../utils/responsiveFormulas';
-
-const NavMenu = ({ onItemClick, selection, ...props }) => {
-  return (
-    <TreeList
-      {...props}
-      ui="nav"
-      expanderFirst={false}
-      onItemclick={(sender, info, eOpts) => {
-        onItemClick(sender.info.node.getId());
-      }}
-      selection={selection}
-      store={{
-        root: {
-          children: [
-            {
-              id: '/',
-              text: 'Home',
-              iconCls: 'x-fa fa-home',
-              leaf: true,
-            },
-            {
-              id: '/about',
-              text: 'About',
-              iconCls: 'x-fa fa-info',
-              leaf: true,
-            },
-          ],
-        },
-      }}
-    />
-  );
-};
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { routeNames } from '../../routes/routes';
+import { useAuth } from '../../hooks/useAuth';
 
 const Login: React.FC = () => {
-  const [showAppMenu, setShowAppMenu] = useState(false);
+  const [inputData, setInputData] = useState({
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState('');
 
   const navigator = useNavigate();
-  const location = useLocation();
+  const auth = useAuth();
 
-  const navigate = (path) => {
-    setShowAppMenu(false);
-    navigator(path);
+  const handleLogin = async () => {
+    await auth.login({
+      email: inputData.email,
+      password: inputData.password,
+    });
+
+    if (!auth.error) {
+      navigator(routeNames.DASHBOARD);
+    }
+    setError(error);
   };
 
-  const navMenuDefaults = {
-    onItemClick: navigate,
-    selection: location.pathname,
+  useEffect(() => {
+    console.log('render');
+  }, []);
+
+  useEffect(() => {
+    setError(auth.error);
+  }, [handleLogin]);
+
+  const handleChange = (_, { name, value }: any) => {
+    setInputData({ ...inputData, [name]: value });
   };
 
   return (
-    <Container fullscreen layout="fit" viewport="true">
-      <TitleBar
-        title={`ExtReactModern 7.1 TypeScript Boilerplate  - React `}
-        docked="top"
+    <>
+      <Header
+        as="h1"
+        color="grey"
+        textAlign="center"
+        style={{
+          marginTop: '2rem',
+        }}
       >
-        {/* {Ext.platformTags.phone && (
-          <Button
-            align="left"
-            iconCls="x-fa fa-bars"
-            handler={this.toggleAppMenu}
-            ripple={false}
-          />
-        )} */}
-      </TitleBar>
+        Планирование поставок
+      </Header>
+      <Grid
+        textAlign="center"
+        style={{ height: '100vh', marginTop: '7rem' }}
+        // verticalAlign="middle"
+      >
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as="h2" color="teal" textAlign="center">
+            Войти в учетную запись
+          </Header>
+          <Form
+            size="large"
+            // onSubmit={(e) => {
+            //   e.preventDefault();
+            //   handleLogin();
+            // }}
+          >
+            <Segment stacked>
+              <Form.Input
+                fluid
+                name="email"
+                icon="user"
+                iconPosition="left"
+                placeholder="E-mail адрес"
+                onChange={handleChange}
+              />
+              <Form.Input
+                fluid
+                name="password"
+                icon="lock"
+                iconPosition="left"
+                placeholder="Пароль"
+                type="password"
+                onChange={handleChange}
+              />
 
-      <Panel scrollable docked="left" shadow zIndex={2}>
-        <NavMenu
-          {...navMenuDefaults}
-          responsiveConfig={{
-            [medium]: {
-              micro: true,
-              width: 56,
-            },
-            [large]: {
-              micro: false,
-              width: 200,
-            },
-          }}
-        />
-      </Panel>
-    </Container>
-    // <Container
-    //   layout={{
-    //     type: 'vbox',
-    //     // align: 'center',
-    //     pack: 'space-between',
-    //   }}
-    // >
-    //   <FormPanel shadow>
-    //     <FieldSet
-    //       title="Separate Label and Placeholder"
-    //       margin="0 0 20 0"
-    //     >
-    //       <TextField
-    //         placeholder="Enter Name..."
-    //         label="Name"
-    //         required
-    //       />
-    //     </FieldSet>
-    //     <FieldSet title="Label as Placeholder" margin="0 0 20 0">
-    //       <TextField labelAlign="placeholder" label="Name" required />
-    //     </FieldSet>
-    //     <FieldSet title="With Error Message">
-    //       <TextField
-    //         labelAlign="placeholder"
-    //         label="Label"
-    //         errorMessage="The value you entered is invalid."
-    //         value="invalid value"
-    //         errorTarget="under"
-    //       />
-    //     </FieldSet>
-    //   </FormPanel>
-    // </Container>
+              <Button
+                color="teal"
+                fluid
+                size="large"
+                onClick={handleLogin}
+              >
+                Войти
+              </Button>
+              {error && (
+                <Message
+                  error
+                  header="Ошибка"
+                  content="Неправильный e-mail или пароль"
+                />
+              )}
+            </Segment>
+          </Form>
+          <Message>
+            <Link to={routeNames.SIGNUP}>Зарегистрироваться</Link>
+          </Message>
+        </Grid.Column>
+      </Grid>
+    </>
   );
 };
 

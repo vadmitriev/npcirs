@@ -4,6 +4,9 @@ import { AuthProvider } from './hooks/useAuth';
 
 import Router from './routes';
 
+declare var Ext: any;
+Ext.require('Ext.plugin.Responsive');
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>

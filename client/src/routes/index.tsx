@@ -9,14 +9,10 @@ import {
 
 import { MainLayout } from '../layouts';
 
-import {
-  DashboardPage,
-  LoginPage,
-  SignUpPage,
-  NotFoundPage,
-} from '../pages';
+import { NotFoundPage } from '../pages';
 
 import { useAuth } from '../hooks/useAuth';
+import { authRoutes, publicRoutes } from './routes';
 
 function RequireAuth() {
   const auth = useAuth();
@@ -32,11 +28,21 @@ const Router = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        {authRoutes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={route.element}
+          />
+        ))}
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          {publicRoutes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={route.element}
+            />
+          ))}
         </Route>
       </Route>
       <Route

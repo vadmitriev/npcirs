@@ -1,7 +1,7 @@
 import { IUser } from './User';
 
 export interface ILoginData {
-  login: string;
+  email: string;
   password: string;
 }
 

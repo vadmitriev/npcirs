@@ -3,7 +3,7 @@ import { TOKEN } from '../utils/constants/intex';
 
 const api = axios.create({
   withCredentials: true,
-  baseURL: process.env.REACT_APP_HOST_URL,
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 api.interceptors.request.use((config) => {

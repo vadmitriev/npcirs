@@ -30,10 +30,10 @@ export const useAuth = (): IAuth => {
 };
 
 function useProvideAuth() {
-  const [user, setUser] = useState(null);
-  const [isAuth, setIsAuth] = useState(false);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [error, setError] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const login = async (loginData: ILoginData) => {
     setIsLoading(true);
