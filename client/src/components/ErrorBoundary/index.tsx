@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { NotFoundPage } from '@/pages';
+import { NotFoundPage } from '../../pages';
 
 interface Props {
   children: ReactNode;
@@ -10,7 +10,7 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
+  state: State = {
     hasError: false,
   };
 

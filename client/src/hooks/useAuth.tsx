@@ -1,7 +1,8 @@
 import React, { useState, useContext, createContext } from 'react';
-import AuthService from '@/api/AuthService';
-import { TOKEN } from '@/constants';
-import {ILoginData, ISignUpData, IUser} from '@/interfaces'
+import AuthService from '../api/AuthService';
+import { TOKEN } from '../utils/constants/intex';
+import { ILoginData, ISignUpData } from '../interfaces/Auth';
+import { IUser } from '../interfaces/User';
 
 interface IAuth {
   user: IUser | null;
@@ -38,7 +39,7 @@ function useProvideAuth() {
     setIsLoading(true);
 
     try {
-      const { data } = await AuthService.login(loginData.login, loginData.password);
+      const { data } = await AuthService.login(loginData);
 
       setUser(data.user);
       setIsAuth(true);

@@ -1,3 +1,5 @@
+import { IUser } from './User';
+
 export interface ILoginData {
   login: string;
   password: string;
@@ -9,8 +11,7 @@ export interface ISignUpData {
   password: string;
 }
 
-export interface IUser {
-  id: string;
-  name: string;
+export interface AuthResponse {
+  user: IUser;
+  token: string;
 }
-

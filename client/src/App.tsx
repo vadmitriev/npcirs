@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '@/hooks/useAuth';
+import { AuthProvider } from './hooks/useAuth';
 
-import Router from '@/routes';
+import Router from './routes';
 
 const App: React.FC = () => {
   return (

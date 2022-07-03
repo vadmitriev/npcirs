@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TOKEN } from '@/constants';
+import { TOKEN } from '../utils/constants/intex';
 
 const api = axios.create({
   withCredentials: true,

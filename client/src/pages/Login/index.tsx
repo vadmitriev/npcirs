@@ -14,7 +14,7 @@ import {
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { medium, large } from '../../responsiveFormulas';
+import { medium, large } from '../../utils/responsiveFormulas';
 
 const NavMenu = ({ onItemClick, selection, ...props }) => {
   return (
