@@ -1,55 +1,36 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
 import {
-  Tab,
-  Grid,
   Header,
+  Grid,
   Form,
   Segment,
-  Button,
   Message,
-  Menu,
-  Container,
-  Image,
-  Dropdown,
+  Button,
 } from 'semantic-ui-react';
-
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { routeNames } from '../../routes/routes';
 import { useAuth } from '../../hooks/useAuth';
 
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
+  const auth = useAuth();
+  const navigator = useNavigate();
+
   const [inputData, setInputData] = useState({
     email: '',
+    name: '',
     password: '',
   });
-  const [error, setError] = useState('');
-
-  const navigator = useNavigate();
-  const auth = useAuth();
-
-  const handleLogin = async () => {
-    await auth.login({
-      email: inputData.email,
-      password: inputData.password,
-    });
-
-    if (!auth.error) {
-      navigator(routeNames.DASHBOARD);
-    }
-    setError(error);
-  };
-
-  useEffect(() => {
-    console.log('render');
-  }, []);
-
-  useEffect(() => {
-    setError(auth.error);
-  }, [handleLogin]);
 
   const handleChange = (_, { name, value }: any) => {
     setInputData({ ...inputData, [name]: value });
+  };
+
+  const handleSignUp = async () => {
+    auth.signup(inputData);
+
+    if (!auth.error) {
+      navigator(routeNames.LOGIN);
+    }
   };
 
   return (
@@ -71,22 +52,31 @@ const Login: React.FC = () => {
       >
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h2" color="teal" textAlign="center">
-            Войти в учетную запись
+            Регистрация
           </Header>
           <Form
             size="large"
-            // onSubmit={(e) => {
-            //   e.preventDefault();
-            //   handleLogin();
-            // }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSignUp();
+            }}
           >
             <Segment stacked>
               <Form.Input
                 fluid
                 name="email"
+                type="email"
                 icon="user"
                 iconPosition="left"
                 placeholder="E-mail адрес"
+                onChange={handleChange}
+              />
+              <Form.Input
+                fluid
+                name="name"
+                icon="user"
+                iconPosition="left"
+                placeholder="Логин"
                 onChange={handleChange}
               />
               <Form.Input
@@ -98,31 +88,27 @@ const Login: React.FC = () => {
                 type="password"
                 onChange={handleChange}
               />
-
               <Button
                 color="teal"
                 fluid
                 size="large"
-                onClick={handleLogin}
+                onClick={handleSignUp}
               >
-                Войти
+                Зарегистрироваться
               </Button>
-              {error && (
-                <Message
-                  error
-                  header="Ошибка"
-                  content="Неправильный e-mail или пароль"
-                />
-              )}
             </Segment>
           </Form>
-          <Message>
-            <Link to={routeNames.SIGNUP}>Зарегистрироваться</Link>
-          </Message>
+          {auth.error && (
+            <Message
+              error
+              header="Ошибка"
+              content="Не удалось зарегистрироваться"
+            />
+          )}
         </Grid.Column>
       </Grid>
     </>
   );
 };
 
-export default Login;
+export default SignUp;

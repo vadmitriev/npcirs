@@ -9,9 +9,9 @@ interface IAuth {
   isAuth: boolean;
   isLoading: boolean;
   error: any;
-  login: (loginData: ILoginData) => void;
+  login: Function;
   logout: () => void;
-  signup: (signUpData: ISignUpData) => void;
+  signup: Function;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -30,12 +30,16 @@ export const useAuth = (): IAuth => {
 };
 
 function useProvideAuth() {
+  const token = localStorage.getItem(TOKEN) || '';
+  const [isAuth, setIsAuth] = useState<boolean>(token.length > 0);
+
   const [user, setUser] = useState<IUser | null>(null);
-  const [isAuth, setIsAuth] = useState<boolean>(false);
+
   const [error, setError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const login = async (loginData: ILoginData) => {
+    setError(null);
     setIsLoading(true);
 
     try {
@@ -44,11 +48,15 @@ function useProvideAuth() {
       setUser(data.user);
       setIsAuth(true);
       localStorage.setItem(TOKEN, data.token);
+
+      return { isAuth, user, token: data.token };
     } catch (e: any) {
       setIsAuth(false);
 
       console.log(e);
       setError(e.message);
+
+      return e;
     } finally {
       setIsLoading(false);
     }

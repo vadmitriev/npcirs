@@ -9,17 +9,25 @@ import {
 
 import { MainLayout } from '../layouts';
 
-import { NotFoundPage } from '../pages';
+import { LoginPage, NotFoundPage, SignUpPage } from '../pages';
 
 import { useAuth } from '../hooks/useAuth';
-import { authRoutes, publicRoutes } from './routes';
+import { privateRoutes, routeNames } from './routes';
 
 function RequireAuth() {
   const auth = useAuth();
   const location = useLocation();
 
   if (!auth.isAuth) {
-    return <Navigate to="/login" state={{ from: location }} />;
+    return (
+      <Navigate to={routeNames.LOGIN} state={{ from: location }} />
+    );
+  }
+
+  if (auth.isAuth && location.pathname === routeNames.LOGIN) {
+    return (
+      <Navigate to={routeNames.MAIN} state={{ from: location }} />
+    );
   }
   return <Outlet />;
 }
@@ -27,16 +35,11 @@ function RequireAuth() {
 const Router = () => {
   return (
     <Routes>
-      <Route element={<MainLayout />}>
-        {authRoutes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={route.element}
-          />
-        ))}
-        <Route element={<RequireAuth />}>
-          {publicRoutes.map((route) => (
+      <Route path={routeNames.LOGIN} element={<LoginPage />} />
+      <Route path={routeNames.SIGNUP} element={<SignUpPage />} />
+      <Route element={<RequireAuth />}>
+        <Route element={<MainLayout />}>
+          {privateRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
