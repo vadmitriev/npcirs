@@ -4,6 +4,8 @@ import { AuthProvider } from './hooks/useAuth';
 
 import Router from './routes';
 
+// import './App.css';
+
 declare var Ext: any;
 Ext.require('Ext.plugin.Responsive');
 

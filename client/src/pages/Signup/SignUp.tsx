@@ -105,6 +105,9 @@ const SignUp: React.FC = () => {
               content="Не удалось зарегистрироваться"
             />
           )}
+          <Message>
+            <Link to={routeNames.LOGIN}>Войти</Link>
+          </Message>
         </Grid.Column>
       </Grid>
     </>

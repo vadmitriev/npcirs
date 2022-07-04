@@ -8,6 +8,11 @@ interface HeaderProps {
   toggleSidebar: () => void;
 }
 
+const styles = {
+  backgroundColor: 'black',
+  color: 'white',
+};
+
 const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const auth = useAuth();
   const handleSignOut = () => {
@@ -15,8 +20,13 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   };
 
   return (
-    <Menu pointing secondary size="massive" color="teal">
-      <Menu.Item onClick={toggleSidebar} as="h3">
+    <Menu
+      pointing
+      secondary
+      size="massive"
+      style={{ ...styles, marginBottom: '0' }}
+    >
+      <Menu.Item onClick={toggleSidebar} as="h3" style={styles}>
         <Icon name="list" />
         Планирование поставок
       </Menu.Item>
@@ -27,6 +37,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           as={Link}
           to={routeNames.LOGIN}
           onClick={handleSignOut}
+          style={styles}
         >
           Выйти
           <Icon name="sign-out" style={{ marginLeft: 10 }} />

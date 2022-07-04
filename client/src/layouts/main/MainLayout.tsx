@@ -5,17 +5,15 @@ import {
   Header,
   Sidebar as CustomSidebar,
 } from '../../components';
-import { useAuth } from '../../hooks/useAuth';
 import { Sidebar, Segment } from 'semantic-ui-react';
 
 import './MainLayout.css';
 
 const MainLayout: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  // const auth = useAuth();
+  const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   return (
@@ -23,16 +21,14 @@ const MainLayout: React.FC = () => {
       <div className="main-layout">
         <Header toggleSidebar={toggleSidebar} />
         <Sidebar.Pushable>
-          <CustomSidebar isOpen={isOpen} toggle={toggleSidebar} />
+          <CustomSidebar isOpen={isOpen} />
 
-          <Sidebar.Pusher style={{ overflow: 'hidden' }}>
-            <Outlet />
+          <Sidebar.Pusher>
+            <div className="page">
+              <Outlet />
+            </div>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
-
-        {/* <Header toggleSidebar={toggleSidebar} /> */}
-        {/* <Sidebar isOpen={isOpen} toggle={toggleSidebar} /> */}
-        {/* <Outlet /> */}
       </div>
     </ErrorBoundary>
   );

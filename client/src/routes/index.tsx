@@ -7,12 +7,24 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { MainLayout } from '../layouts';
+// import { MainLayout } from '../layouts';
+import MainLayout from '../layouts/main/MainLayout';
 
-import { LoginPage, NotFoundPage, SignUpPage } from '../pages';
+// import {
+//   // DashboardPage,
+//   // DeliveriesPage,
+//   // LoginPage,
+//   NotFoundPage,
+//   // SignUpPage,
+// } from '../pages';
+
+import NotFoundPage from '../pages/NotFound/NotFound';
+
+import LoginPage from '../pages/Login/Login';
+import SignUpPage from '../pages/Signup/SignUp';
 
 import { useAuth } from '../hooks/useAuth';
-import { privateRoutes, routeNames } from './routes';
+import { authRoutes, privateRoutes, routeNames } from './routes';
 
 function RequireAuth() {
   const auth = useAuth();
@@ -37,15 +49,28 @@ const Router = () => {
     <Routes>
       <Route path={routeNames.LOGIN} element={<LoginPage />} />
       <Route path={routeNames.SIGNUP} element={<SignUpPage />} />
+      {authRoutes.map((route) => {
+        const Element = route.element;
+        return (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={<Element />}
+          />
+        );
+      })}
       <Route element={<RequireAuth />}>
         <Route element={<MainLayout />}>
-          {privateRoutes.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={route.element}
-            />
-          ))}
+          {privateRoutes.map((route) => {
+            const Element = route.element;
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<Element />}
+              />
+            );
+          })}
         </Route>
       </Route>
       <Route

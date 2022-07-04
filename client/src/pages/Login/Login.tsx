@@ -23,57 +23,22 @@ const Login: React.FC = () => {
   const navigator = useNavigate();
   const auth = useAuth();
 
-  const handleLogin = async () => {
-    const { user } = await auth.login(inputData);
-
-    if (user) {
+  useEffect(() => {
+    if (auth.user) {
       navigator(routeNames.MAIN);
     }
+  }, [auth.user, navigator]);
+
+  const handleLogin = () => {
+    auth.login(inputData);
   };
 
   const handleChange = (_, { name, value }: any) => {
     setInputData({ ...inputData, [name]: value });
   };
 
-  // return (
-  //   <>
-  //     <h1>Планирование поставок</h1>
-  //     <form
-  //       onSubmit={(e) => {
-  //         e.preventDefault();
-  //         handleLogin;
-  //       }}
-  //     >
-  //       <input
-  //         onChange={(e) =>
-  //           handleChange(e, { name: 'email', value: e.target.value })
-  //         }
-  //         placeholder="email"
-  //       />
-  //       <input
-  //         type="password"
-  //         onChange={(e) =>
-  //           handleChange(e, {
-  //             name: 'password',
-  //             value: e.target.value,
-  //           })
-  //         }
-  //         placeholder="password"
-  //       />
-  //       <button type="submit" onClick={handleLogin}>
-  //         Войти
-  //       </button>
-  //       {auth.error && (
-  //         <div style={{ color: 'red' }}>
-  //           Неправильный логин или пароль
-  //         </div>
-  //       )}
-  //     </form>
-  //   </>
-  // );
-
   return (
-    <>
+    <div>
       <Header
         as="h1"
         color="grey"
@@ -87,7 +52,6 @@ const Login: React.FC = () => {
       <Grid
         textAlign="center"
         style={{ height: '100vh', marginTop: '7rem' }}
-        // verticalAlign="middle"
       >
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h2" color="teal" textAlign="center">
@@ -140,7 +104,7 @@ const Login: React.FC = () => {
           </Message>
         </Grid.Column>
       </Grid>
-    </>
+    </div>
   );
 };
 
