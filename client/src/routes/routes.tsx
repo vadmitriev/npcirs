@@ -3,7 +3,7 @@ import React from 'react';
 import DashboardPage from '../pages/Dashboard/Dashboard';
 import DeliveriesPage from '../pages/Deliveries/Deliveries';
 import LoginPage from '../pages/Login/Login';
-import SignUpPage from '../pages/Signup/SignUp';
+import SignUpPage from '../pages/Signup/Signup';
 
 export enum routeNames {
   LOGIN = '/login',

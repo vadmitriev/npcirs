@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '../../routes/routes';
 import { useAuth } from '../../hooks/useAuth';
-import { LoginForm } from '../../components';
+import { LoginForm } from '../../containers';
 
 const Login: React.FC = () => {
   const [inputData, setInputData] = useState({

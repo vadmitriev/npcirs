@@ -19,7 +19,7 @@
 .pushable {
 	height: 100vh;
 	/* overflow: hidden; */
-	margin-right: 15%;
+	/* margin-right: 15%; */
 }
 
 .pusher > div {
