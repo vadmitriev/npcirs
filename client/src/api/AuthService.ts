@@ -8,17 +8,17 @@ import { AxiosResponse } from 'axios';
 
 export default class AuthService {
   static async login(
-    loginData: ILoginData,
+    data: ILoginData,
   ): Promise<AxiosResponse<AuthResponse>> {
     return api.post<AuthResponse>('/auth/login', {
-      username: loginData.name,
-      password: loginData.password,
+      username: data.name,
+      password: data.password,
     });
   }
 
   static async signup(
-    signUpData: ISignUpData,
+    data: ISignUpData,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return api.post<AuthResponse>('/auth/signup', signUpData);
+    return api.post<AuthResponse>('/auth/signup', data);
   }
 }

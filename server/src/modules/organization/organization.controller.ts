@@ -11,6 +11,7 @@ import {
   Param,
   Delete,
   NotFoundException,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -36,8 +37,8 @@ export class OrganizationController {
     description: 'The found all records',
     type: Organization,
   })
-  async findAll() {
-    return await this.organizationService.findAll();
+  async findAll(@Param('regionId') regionId: string) {
+    return await this.organizationService.findAll(regionId);
   }
 
   @UseGuards(AuthGuard('jwt'))

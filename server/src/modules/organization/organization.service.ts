@@ -15,9 +15,13 @@ export class OrganizationService {
     return await this.organizationRepository.create<Organization>(organization);
   }
 
-  async findAll(): Promise<{ count: number; data: Organization[] }> {
-    const data = await this.organizationRepository.findAll();
-    const count = await this.getRowCount();
+  async findAll(
+    regionId: string,
+  ): Promise<{ count: number; data: Organization[] }> {
+    const data = await this.organizationRepository.findAll({
+      where: { [REGION_ID_COL_NAME]: regionId },
+    });
+    const count = await this.getRowCount(regionId);
 
     return {
       count,
@@ -25,7 +29,7 @@ export class OrganizationService {
     };
   }
 
-  async findOne(id: string, regionId): Promise<Organization> {
+  async findOne(id: string, regionId: string): Promise<Organization> {
     return await this.organizationRepository.findOne<Organization>({
       where: { id, [REGION_ID_COL_NAME]: regionId },
     });
@@ -41,7 +45,7 @@ export class OrganizationService {
     return await this.organizationRepository.destroy({ where: { id } });
   }
 
-  async getRowCount(regionId?): Promise<number> {
+  async getRowCount(regionId?: string): Promise<number> {
     if (!regionId) {
       return await this.organizationRepository.count();
     }

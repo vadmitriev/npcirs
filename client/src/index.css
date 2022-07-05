@@ -8,3 +8,7 @@
   height: 100vh;
   overflow: hidden;
 }
+
+.x-gridcolumn .x-text-el {
+  white-space: normal;
+}

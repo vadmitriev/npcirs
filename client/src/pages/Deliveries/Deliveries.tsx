@@ -1,52 +1,121 @@
 import React, { useState, useEffect } from 'react';
+import { toast, SemanticToastContainer } from 'react-semantic-toasts';
 
-import { Message } from 'semantic-ui-react';
+import { Message, Dimmer, Loader } from 'semantic-ui-react';
+import OrganizationService from '../../api/OrganizationService';
+import RegionService from '../../api/RegionService';
 import {
   DeliveriesTable,
   OrganizationModal,
   RegionsList,
 } from '../../containers';
-
-import { small, medium } from '../../utils/responsiveFormulas';
-
-declare var Ext: any;
-// const Ext = window['Ext'];
+import { IOrganization } from '../../interfaces/Organization';
+import { IRegion } from '../../interfaces/Region';
 
 const Deliveries: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [regionData, setRegionData] = useState([]);
+  const [regionData, setRegionData] = useState<IRegion[]>([]);
   const [organizationData, setOrganizationData] = useState([]);
   const [currentRegion, setCurrentRegion] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const openModal = () => {
-    console.log('open modal');
+  const showToast = (
+    title: string,
+    type: 'success' | 'error' | 'info' = 'error',
+  ) => {
+    toast({
+      type,
+      title,
+      icon: 'time',
+      animation: 'bounce',
+      size: 'small',
+      time: 5000,
+    });
   };
 
-  const deleteRows = (d1, d2) => {
-    console.log('delete rows', d1, d2);
-  };
+  useEffect(() => {
+    setIsLoading(true);
+
+    RegionService.load()
+      .then((result) => {
+        setRegionData(result.data.data);
+      })
+      .catch((err) => {
+        setError(err);
+        showToast('Произошла ошибка');
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (!currentRegion) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    OrganizationService.load(currentRegion)
+      .then((res) => {
+        setOrganizationData(res.data.data);
+      })
+      .catch((err) => {
+        setError(err);
+        showToast('Произошла ошибка');
+      })
+      .finally(() => setIsLoading(false));
+  }, [currentRegion]);
 
   const handleModalClose = () => {
     setModalVisible(false);
   };
 
-  const handleModalSubmit = (data) => {
-    // TODO: save data
+  const handleModalSubmit = (data: IOrganization) => {
+    setModalVisible(true);
+
+    OrganizationService.create(currentRegion, data)
+      .then(() => OrganizationService.load(currentRegion))
+      .then((res) => {
+        setOrganizationData(res.data.data);
+        showToast('Организация добавлена', 'success');
+      })
+      .catch((err) => {
+        setError(err);
+        showToast('Произошла ошибка');
+      })
+      .finally(() => setIsLoading(false));
+
     setModalVisible(false);
   };
 
-  const handleRegionChange = (region) => {
-    setCurrentRegion(region);
+  const handleRegionChange = (regionId: string) => {
+    setCurrentRegion(regionId);
   };
 
-  const handleDeleteItem = () => {};
+  const handleDeleteItem = (id: string) => {
+    setIsLoading(true);
 
-  const handleTableChange = (selected) => {
-    console.log('table change', selected);
+    OrganizationService.delete(currentRegion, id)
+      .then(() => OrganizationService.load(currentRegion))
+      .then((res) => {
+        setOrganizationData(res.data.data);
+        showToast('Организация удалена', 'success');
+      })
+      .catch((err) => {
+        setError(err);
+        showToast('Произошла ошибка');
+      });
+  };
+
+  const handleTableChange = (newItem: IOrganization) => {
+    OrganizationService.update(currentRegion, newItem);
   };
 
   return (
     <div>
+      <Dimmer active={isLoading}>
+        <Loader>Идет загрузка</Loader>
+      </Dimmer>
       <Message>
         <Message.Header>
           Форма МПЭ 1гем - Номенклатура продукции и возможности
@@ -65,6 +134,7 @@ const Deliveries: React.FC = () => {
           data={regionData}
         />
         <DeliveriesTable
+          data={organizationData}
           onAddItem={() => setModalVisible(true)}
           onDeleteItem={handleDeleteItem}
           onChangeItem={handleTableChange}
@@ -76,6 +146,7 @@ const Deliveries: React.FC = () => {
           onSubmit={handleModalSubmit}
         />
       </div>
+      <SemanticToastContainer position="bottom-right" />
     </div>
   );
 };

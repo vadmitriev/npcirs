@@ -3,30 +3,18 @@
 }
 
 .page {
-	padding: 1rem 5rem 2rem 15%;
-	/* padding-left: 10%; */
-	/* position: relative; */
+	padding: 1rem 5rem 2rem 10%;
 	height: 95vh;
-	/* margin-left: 5%; */
-
-	/* margin-right: 15%; */
-	/* margin-left: 5%; */
-	/* overflow-x: visible; */
-	/* margin: 5%; */
 	width: 100%;
 }
 
 .pushable {
 	height: 100vh;
-	/* overflow: hidden; */
-	/* margin-right: 15%; */
 }
 
 .pusher > div {
 	position: absolute;
-	/* top: 2px; */
-	/* bottom: 40px; */
+	
 	overflow-y: auto;
 	width: 100%;
-
 }

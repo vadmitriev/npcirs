@@ -1,4 +1,5 @@
 export interface IOrganization {
+  id?: string;
   npp: number;
   r1022: string;
   naim_org: string;
