@@ -12,6 +12,7 @@ interface IAuth {
   login: Function;
   logout: () => void;
   signup: Function;
+  clearError: () => void;
 }
 
 const AuthContext = createContext({} as IAuth);
@@ -93,6 +94,10 @@ function useProvideAuth() {
     }
   };
 
+  const clearError = () => {
+    setError(null);
+  };
+
   return {
     user,
     isAuth,
@@ -101,5 +106,6 @@ function useProvideAuth() {
     login,
     logout,
     signup,
+    clearError,
   };
 }

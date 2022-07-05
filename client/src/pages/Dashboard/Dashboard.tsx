@@ -7,6 +7,7 @@ import {
   Segment,
   Placeholder,
   Statistic,
+  Message,
 } from 'semantic-ui-react';
 
 const cards = [
@@ -36,6 +37,11 @@ const cards = [
 const Dashboard: React.FC = () => {
   return (
     <div>
+      <Message>
+        <Message.Header>Главная страница</Message.Header>
+        <p>Контроль ведения возможностей поставок</p>
+      </Message>
+
       <Statistic.Group>
         <Statistic label="Saves" value="22" />
         <Statistic label="Signups" value="Three Thousand" text />
