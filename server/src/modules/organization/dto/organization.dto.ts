@@ -11,6 +11,7 @@ export class OrganizationDto {
   @IsNotEmpty()
   readonly adr_fact: string;
 
+  @IsNotEmpty()
   readonly inn: string;
 
   readonly plazma_max: string;

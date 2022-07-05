@@ -8,20 +8,39 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBody,
+} from '@nestjs/swagger';
 import { IRegionQuery } from './interfaces/regionQuery.interface';
 import { RegionsService } from './regions.service';
 import { Region } from './region.entity';
 
+@ApiBearerAuth()
+@ApiTags('regions')
 @Controller('regions')
 export class RegionsController {
   constructor(private regionService: RegionsService) {}
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'The found all records',
+    type: Region,
+  })
   async findAll(@Body() query: IRegionQuery) {
     return await this.regionService.findAll(query);
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'The found record',
+    type: Region,
+  })
   async findOneById(@Param('id') id: string) {
     const region = await this.regionService.findOneById(id);
 
@@ -33,11 +52,14 @@ export class RegionsController {
   }
 
   @Post()
+  @ApiBody({ type: Region })
+  @ApiOperation({ summary: 'Create region' })
   async create(@Body() region: RegionDto): Promise<Region> {
     return await this.regionService.create(region);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete region' })
   async delete(@Param('id') id: string) {
     const deleted = await this.regionService.delete(id);
 

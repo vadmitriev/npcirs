@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Organization } from './organization.entity';
 import { OrganizationDto } from './dto/organization.dto';
 import { ORGANIZATION_REPOSITORY } from 'src/core/constants';
+import { REGION_ID_COL_NAME } from './constants';
 
 @Injectable()
 export class OrganizationService {
@@ -11,20 +12,22 @@ export class OrganizationService {
   ) {}
 
   async create(organization: OrganizationDto): Promise<Organization> {
-    const rowCount = await this.getRowCount();
-    return await this.organizationRepository.create<Organization>({
-      ...organization,
-      npp: rowCount + 1,
-    });
+    return await this.organizationRepository.create<Organization>(organization);
   }
 
-  async findAll(): Promise<Organization[]> {
-    return await this.organizationRepository.findAll();
+  async findAll(): Promise<{ count: number; data: Organization[] }> {
+    const data = await this.organizationRepository.findAll();
+    const count = await this.getRowCount();
+
+    return {
+      count,
+      data,
+    };
   }
 
   async findOne(id: string, regionId): Promise<Organization> {
     return await this.organizationRepository.findOne<Organization>({
-      where: { id, r1022: regionId },
+      where: { id, [REGION_ID_COL_NAME]: regionId },
     });
   }
 
@@ -38,7 +41,13 @@ export class OrganizationService {
     return await this.organizationRepository.destroy({ where: { id } });
   }
 
-  async getRowCount(): Promise<number> {
-    return await this.organizationRepository.count();
+  async getRowCount(regionId?): Promise<number> {
+    if (!regionId) {
+      return await this.organizationRepository.count();
+    }
+
+    return await this.organizationRepository.count({
+      where: { [REGION_ID_COL_NAME]: regionId },
+    });
   }
 }

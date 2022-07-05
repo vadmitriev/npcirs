@@ -20,9 +20,14 @@ export class RegionsService {
     return await this.regionRepository.create<Region>(region);
   }
 
-  async findAll(query: IRegionQuery = this.defaultQuery): Promise<Region[]> {
+  async findAll(
+    query: IRegionQuery = this.defaultQuery,
+  ): Promise<{ count: number; data: Region[] }> {
+    const count = await this.getCountRow();
+
     if (!query || !Object.keys(query).length) {
-      return await this.regionRepository.findAll();
+      const data = await this.regionRepository.findAll();
+      return { count, data };
     }
 
     const params = {};
@@ -42,9 +47,11 @@ export class RegionsService {
       });
     }
 
-    return await this.regionRepository.findAll({
+    const data = await this.regionRepository.findAll({
       where: params,
     });
+
+    return { count, data };
   }
 
   async findOneById(id: string): Promise<Region> {
@@ -57,5 +64,9 @@ export class RegionsService {
     return await this.regionRepository.destroy({
       where: { [ID_COL_NAME]: id },
     });
+  }
+
+  async getCountRow(): Promise<number> {
+    return await this.regionRepository.count();
   }
 }

@@ -21,7 +21,10 @@ import MainLayout from '../layouts/main/MainLayout';
 import NotFoundPage from '../pages/NotFound/NotFound';
 
 import LoginPage from '../pages/Login/Login';
-import SignUpPage from '../pages/Signup/SignUp';
+import SignUpPage from '../pages/Signup/Signup';
+
+import DashboardPage from '../pages/Dashboard/Dashboard';
+import DeliveriesPage from '../pages/Deliveries/Deliveries';
 
 import { useAuth } from '../hooks/useAuth';
 import { authRoutes, privateRoutes, routeNames } from './routes';
@@ -61,7 +64,12 @@ const Router = () => {
       })}
       <Route element={<RequireAuth />}>
         <Route element={<MainLayout />}>
-          {privateRoutes.map((route) => {
+          <Route path={routeNames.MAIN} element={<DashboardPage />} />
+          <Route
+            path={routeNames.DELIVERIES}
+            element={<DeliveriesPage />}
+          />
+          {/* {privateRoutes.map((route) => {
             const Element = route.element;
             return (
               <Route
@@ -70,7 +78,7 @@ const Router = () => {
                 element={<Element />}
               />
             );
-          })}
+          })} */}
         </Route>
       </Route>
       <Route
