@@ -8,6 +8,7 @@
     "@sencha/ext-react-modern": "^7.3.0",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
+    "is-inn-js": "^1.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^6.3.0",

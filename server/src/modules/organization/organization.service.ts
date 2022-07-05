@@ -11,16 +11,34 @@ export class OrganizationService {
   ) {}
 
   async create(organization: OrganizationDto): Promise<Organization> {
-    return await this.organizationRepository.create<Organization>(organization);
+    const rowCount = await this.getRowCount();
+    return await this.organizationRepository.create<Organization>({
+      ...organization,
+      npp: rowCount + 1,
+    });
   }
 
   async findAll(): Promise<Organization[]> {
     return await this.organizationRepository.findAll();
   }
 
-  async findOneById(id: string): Promise<Organization> {
+  async findOne(id: string, regionId): Promise<Organization> {
     return await this.organizationRepository.findOne<Organization>({
-      where: { id },
+      where: { id, r1022: regionId },
     });
+  }
+
+  async update(id: string, data: OrganizationDto): Promise<Organization> {
+    return await this.organizationRepository
+      .update(data, { where: { id } })
+      .then(() => this.organizationRepository.findOne({ where: { id } }));
+  }
+
+  async delete(id: string) {
+    return await this.organizationRepository.destroy({ where: { id } });
+  }
+
+  async getRowCount(): Promise<number> {
+    return await this.organizationRepository.count();
   }
 }

@@ -7,6 +7,11 @@ import { Op, where, fn, col } from 'sequelize';
 import { ID_COL_NAME } from './constants';
 @Injectable()
 export class RegionsService {
+  defaultQuery: IRegionQuery = {
+    startsWith: [0, 13],
+    length: 10,
+  };
+
   constructor(
     @Inject(REGION_REPOSITORY) private readonly regionRepository: typeof Region,
   ) {}
@@ -15,7 +20,7 @@ export class RegionsService {
     return await this.regionRepository.create<Region>(region);
   }
 
-  async findAll(query?: IRegionQuery): Promise<Region[]> {
+  async findAll(query: IRegionQuery = this.defaultQuery): Promise<Region[]> {
     if (!query || !Object.keys(query).length) {
       return await this.regionRepository.findAll();
     }
@@ -44,6 +49,12 @@ export class RegionsService {
 
   async findOneById(id: string): Promise<Region> {
     return await this.regionRepository.findOne<Region>({
+      where: { [ID_COL_NAME]: id },
+    });
+  }
+
+  async delete(id: string) {
+    return await this.regionRepository.destroy({
       where: { [ID_COL_NAME]: id },
     });
   }

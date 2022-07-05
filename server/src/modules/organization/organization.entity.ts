@@ -12,6 +12,7 @@ import { Region } from '../regions/region.entity';
 export class Organization extends Model<Organization> {
   @Column({
     type: DataType.INTEGER,
+    allowNull: false,
   })
   npp: number;
 

@@ -1,4 +1,4 @@
 export interface IRegionQuery {
-  startsWith?: string[];
+  startsWith?: number[];
   length?: number;
 }
