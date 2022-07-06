@@ -5,7 +5,7 @@ export interface IOrganization {
   naim_org: string;
   adr_fact: string;
   inn: string;
-  plazma_max: string;
+  plazma_max: number;
   plazma_cena: number;
   erm_max: number;
   erm_cena: number;

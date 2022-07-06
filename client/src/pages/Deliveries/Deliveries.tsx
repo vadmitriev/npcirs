@@ -18,7 +18,7 @@ import { IOrganization } from '../../interfaces/Organization';
 import { IRegion } from '../../interfaces/Region';
 
 const Deliveries: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
   const [regionData, setRegionData] = useState<IRegion[]>([]);
   const [organizationData, setOrganizationData] = useState([]);
   const [currentRegion, setCurrentRegion] = useState<IRegion>(null);
