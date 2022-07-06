@@ -1,17 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { Grid, Container } from '@sencha/ext-react-modern';
-import { Menu, Button } from 'semantic-ui-react';
+import {
+  Menu,
+  Button,
+  Message,
+  ButtonGroup,
+  Segment,
+  Icon,
+} from 'semantic-ui-react';
 
 import { IOrganization } from '../../interfaces/Organization';
+
+import './DeliveriesTable.css';
 
 declare var Ext: any;
 
 interface DeliveriesTableProps {
   data: IOrganization[];
   onAddItem: () => void;
-  onDeleteItem: (id: string) => void;
+  onDeleteItem: (ids: string[]) => void;
   onChangeItem: (item: IOrganization) => void;
+  onRefresh: () => void;
 }
 
 const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
@@ -19,26 +29,47 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
   onAddItem,
   onChangeItem,
   onDeleteItem,
+  onRefresh,
 }) => {
-  const store = Ext.create('Ext.data.Store', {
-    autoLoad: true,
+  const handleUpdateRecord = (
+    newStore,
+    record,
+    operation,
+    modifiedFieldNames,
+    details,
+  ) => {
+    if (operation === 'edit') {
+      const item: IOrganization = record.data;
+      onChangeItem(item);
+    }
+  };
+
+  const store = Ext.data.Store({
     data,
+    listeners: {
+      update: handleUpdateRecord,
+    },
   });
 
   const gridRef = useRef<any>(null);
 
   const handleDelete = () => {
-    const records = gridRef.current.cmp.getSelections(); //.getSelections());
+    const grid = gridRef.current.cmp;
+    const records = grid.getSelections();
     if (!records || !records.length) {
       return;
     }
 
-    records.forEach((record) => {
-      console.log(record.data);
+    const ids: string[] = records.map((record) => {
       const item: IOrganization = record.data;
-      onDeleteItem(item.id);
+      return item.id;
     });
-    // onDeleteItem()
+
+    onDeleteItem(ids);
+  };
+
+  const handleUpdate = (hm, hm2, hm3) => {
+    console.log(hm, hm2, hm3);
   };
 
   const columns = [
@@ -51,12 +82,14 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'naim_org',
           editable: true,
           draggable: false,
+          width: '130px',
         },
         {
           text: 'Местонахождение',
           dataIndex: 'adr_fact',
           editable: true,
           draggable: false,
+          width: '150px',
         },
         {
           text: 'ИНН',
@@ -141,43 +174,41 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
   ];
 
   return (
-    <div
-      style={{
-        marginLeft: '20px',
-        width: '87%',
-        position: 'relative',
-      }}
-    >
-      <Menu>
-        <Menu.Item>
+    <div className="table-wrapper">
+      <Message style={{ backgroundColor: 'white' }}>
+        <ButtonGroup>
           <Button primary onClick={onAddItem}>
             Добавить
           </Button>
-        </Menu.Item>
-
-        <Menu.Item>
-          <Button negative onClick={handleDelete}>
+          <Button
+            negative
+            onClick={handleDelete}
+            style={{ marginLeft: '10px' }}
+          >
             Удалить
           </Button>
-        </Menu.Item>
-      </Menu>
-      <Grid
-        ref={gridRef}
-        store={store}
-        plugins={{ cellediting: true }}
-        height="100%"
-        width="100%"
-        columnLines={true}
-        selectable={{ checkbox: true }}
-        columnResize={true}
-        flex={1}
-        style={{
-          marginLeft: '20px',
-          width: '100%',
-          display: 'inline-flex',
-        }}
-        columns={columns}
-      />
+        </ButtonGroup>
+        <Button icon floated="right" onClick={onRefresh}>
+          <Icon name="refresh" />
+        </Button>
+      </Message>
+      <Segment style={{ height: '75vh' }}>
+        <Grid
+          ref={gridRef}
+          store={store}
+          data={data}
+          plugins={{ cellediting: true }}
+          height="100%"
+          width="100%"
+          rowNumbers={true}
+          columnLines={true}
+          selectable={{ checkbox: true }}
+          columnResize={false}
+          columns={columns}
+          // onEdit={handleUpdate}
+          onUpdateData={handleUpdate}
+        />
+      </Segment>
     </div>
   );
 };

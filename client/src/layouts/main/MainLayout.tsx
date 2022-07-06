@@ -6,8 +6,10 @@ import {
   Sidebar as CustomSidebar,
 } from '../../components';
 import { Sidebar, Sticky } from 'semantic-ui-react';
+import 'react-semantic-toasts/styles/react-semantic-alert.css';
 
 import './MainLayout.css';
+import { SemanticToastContainer } from 'react-semantic-toasts';
 
 const MainLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -29,6 +31,10 @@ const MainLayout: React.FC = () => {
             </div>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
+        <SemanticToastContainer
+          position="bottom-right"
+          maxToasts={5}
+        />
       </div>
     </ErrorBoundary>
   );

@@ -25,7 +25,6 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
   const [inputData, setInputData] = useState<IOrganization>(null);
   const [isValid, setIsValid] = useState(false);
 
-
   const validate = () => {
     return false;
     return true;
@@ -56,27 +55,27 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
         <Modal.Header>Карточка объекта</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
-            <Segment stacked>
-              <Form.Input
-                required
-                fluid
-                name="email"
-                type="email"
-                icon="user"
-                iconPosition="left"
-                placeholder="E-mail адрес"
-                onChange={handleChange}
-              />
-              <Form.Input
-                required
-                fluid
-                name="name"
-                icon="user"
-                iconPosition="left"
-                placeholder="Логин"
-                onChange={handleChange}
-              />
-            </Segment>
+            {/* <Segment stacked> */}
+            <Form.Input
+              required
+              fluid
+              name="email"
+              type="email"
+              icon="user"
+              iconPosition="left"
+              placeholder="E-mail адрес"
+              onChange={handleChange}
+            />
+            <Form.Input
+              required
+              fluid
+              name="name"
+              icon="user"
+              iconPosition="left"
+              placeholder="Логин"
+              onChange={handleChange}
+            />
+            {/* </Segment> */}
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>

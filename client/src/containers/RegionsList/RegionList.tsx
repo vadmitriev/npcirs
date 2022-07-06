@@ -19,14 +19,16 @@ import { IRegion } from '../../interfaces/Region';
 import './RegionList.css';
 
 interface RegionsListProps {
-  onChange: (regionId: string) => void;
+  onChange: (region: IRegion) => void;
   data: IRegion[];
+  activeItem: IRegion;
 }
 
 declare var Ext: any;
 
 const RegionsList: React.FC<RegionsListProps> = ({
   onChange,
+  activeItem,
   data = [],
 }) => {
   const [items, setItems] = useState(data);
@@ -75,6 +77,10 @@ const RegionsList: React.FC<RegionsListProps> = ({
   const renderRow = ({ index, key, style, parent }) => {
     const item = filteredItems[index];
 
+    const cls = `row ${
+      activeItem && activeItem.p00 === item.p00 ? 'active' : ''
+    }`;
+
     return (
       <CellMeasurer
         key={key}
@@ -85,8 +91,8 @@ const RegionsList: React.FC<RegionsListProps> = ({
       >
         <div
           style={style}
-          className="row"
-          onClick={() => onChange(item.p00)}
+          className={cls}
+          onClick={() => onChange(item)}
         >
           <div className="list-content">
             <div>{filteredItems[index].p01}</div>

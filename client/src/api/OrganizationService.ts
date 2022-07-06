@@ -27,10 +27,10 @@ export default class OrganizationService {
     regionId: string,
     data: IOrganization,
   ): Promise<AxiosResponse<IOrganization>> {
-    return api.put(formUrl(regionId), data);
+    return api.put(`${formUrl(regionId)}/${data.id}`, data);
   }
 
   static async delete(regionId: string, id: string) {
-    return api.delete(formUrl(regionId), { data: { id } });
+    return api.delete(`${formUrl(regionId)}/${id}`);
   }
 }

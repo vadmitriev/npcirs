@@ -16,6 +16,5 @@
 .pusher > div {
 	position: absolute;
 	
-	/* overflow-y: auto; */
 	width: 100%;
 }

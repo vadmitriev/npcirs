@@ -26,8 +26,13 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       size="massive"
       style={{ ...styles, marginBottom: '0' }}
     >
-      <Menu.Item onClick={toggleSidebar} as="h3" style={styles}>
-        <Icon name="list" />
+      <Menu.Item
+        icon
+        onClick={toggleSidebar}
+        as="h3"
+        style={{ ...styles, cursor: 'pointer' }}
+      >
+        <Icon name="list" style={{ marginRight: '10px' }} />
         Планирование поставок
       </Menu.Item>
 
