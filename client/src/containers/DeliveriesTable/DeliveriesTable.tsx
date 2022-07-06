@@ -169,6 +169,8 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
         width="100%"
         columnLines={true}
         selectable={{ checkbox: true }}
+        columnResize={true}
+        flex={1}
         style={{
           marginLeft: '20px',
           width: '100%',

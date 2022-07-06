@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Container,
-  List,
   Input,
-  Card,
   InputOnChangeData,
   Icon,
-  ListItemProps,
-  Header,
   Message,
-  Segment,
 } from 'semantic-ui-react';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+} from 'react-virtualized';
+
 import useDebounce from '../../hooks/useDebounce';
 import { IRegion } from '../../interfaces/Region';
+
+import './RegionList.css';
 
 interface RegionsListProps {
   onChange: (regionId: string) => void;
@@ -58,28 +62,46 @@ const RegionsList: React.FC<RegionsListProps> = ({
     setFilteredItems(newItems);
   }, [debouncedQuery]);
 
-  const handleSelect = (
-    _: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    data: ListItemProps,
-  ) => {
-    onChange(data.name);
-  };
-
   const clearSearch = () => {
     setQuery('');
     setFilteredItems(items);
   };
 
+  const cache = new CellMeasurerCache({
+    fixedWidth: true,
+    defaultHeight: 30,
+  });
+
+  const renderRow = ({ index, key, style, parent }) => {
+    const item = filteredItems[index];
+
+    return (
+      <CellMeasurer
+        key={key}
+        cache={cache}
+        parent={parent}
+        columnIndex={0}
+        rowIndex={index}
+      >
+        <div
+          style={style}
+          className="row"
+          onClick={() => onChange(item.p00)}
+        >
+          <div className="list-content">
+            <div>{filteredItems[index].p01}</div>
+          </div>
+        </div>
+      </CellMeasurer>
+    );
+  };
+
   const clearIcon = query.length && (
-    <Icon
-      name="x"
-      style={{ cursor: 'pointer', zIndex: 10, pointerEvents: 'auto' }}
-      onClick={clearSearch}
-    />
+    <Icon name="x" className="clear-icon" onClick={clearSearch} />
   );
 
   return (
-    <div style={{ maxWidth: '200px' }}>
+    <div className="list-wrapper">
       <Container textAlign="center">
         <Message attached size="small">
           <Message.Header>Субъект РФ</Message.Header>
@@ -88,32 +110,28 @@ const RegionsList: React.FC<RegionsListProps> = ({
               icon={clearIcon || 'search'}
               placeholder="Поиск"
               onChange={handleSearch}
-              style={{ maxWidth: '170px', marginTop: '10px' }}
+              className="region-input"
               value={query}
             />
           </Message.Content>
         </Message>
-        <Segment
-          style={{
-            marginTop: '0',
-            overflow: 'auto',
-            maxHeight: '70vh',
-          }}
-        >
-          <List>
-            {filteredItems.map((item) => (
-              <Card key={item.p00}>
-                <List.Item
-                  name={item.p00}
-                  style={{ margin: '1px', cursor: 'pointer' }}
-                  onClick={handleSelect}
-                >
-                  {item.p01}
-                </List.Item>
-              </Card>
-            ))}
-          </List>
-        </Segment>
+        <div className="list">
+          <AutoSizer>
+            {({ width, height }) => {
+              return (
+                <List
+                  width={width}
+                  height={height}
+                  deferredMeasurementCache={cache}
+                  rowHeight={cache.rowHeight}
+                  rowRenderer={renderRow}
+                  rowCount={filteredItems.length}
+                  overscanRowCount={3}
+                />
+              );
+            }}
+          </AutoSizer>
+        </div>
       </Container>
     </div>
   );

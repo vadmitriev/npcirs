@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Icon, Header as UIHeader } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 import { useAuth } from '../../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import { routeNames } from '../../routes/routes';

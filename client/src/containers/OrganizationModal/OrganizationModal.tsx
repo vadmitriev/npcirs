@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import {
-//   Grid,
-//   Dialog,
-//   DialogTitle,
-//   DialogContent,
-// } from '@sencha/ext-react-modern';
 
 import {
   Button,
@@ -30,6 +24,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
 }) => {
   const [inputData, setInputData] = useState<IOrganization>(null);
   const [isValid, setIsValid] = useState(false);
+
 
   const validate = () => {
     return false;
