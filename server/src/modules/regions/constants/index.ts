@@ -1,1 +1,1 @@
-export const ID_COL_NAME='p00'
+export const ID_COL_NAME = 'p00';

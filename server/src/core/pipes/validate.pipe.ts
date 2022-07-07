@@ -1,7 +1,6 @@
 import {
   Injectable,
   ArgumentMetadata,
-  BadRequestException,
   ValidationPipe,
   UnprocessableEntityException,
 } from '@nestjs/common';

@@ -63,7 +63,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </Header>
           <Form
             size="large"
-            onSubmit={(e, data) => {
+            onSubmit={(e) => {
               e.preventDefault();
               onSubmit();
             }}

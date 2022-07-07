@@ -13,7 +13,7 @@ import {
   DeliveriesTable,
   OrganizationModal,
   RegionsList,
-} from '../../containers';
+} from '../../components';
 import { IOrganization } from '../../interfaces/Organization';
 import { IRegion } from '../../interfaces/Region';
 
@@ -23,7 +23,7 @@ const Deliveries: React.FC = () => {
   const [organizationData, setOrganizationData] = useState([]);
   const [currentRegion, setCurrentRegion] = useState<IRegion>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [, setError] = useState(null);
 
   const showToast = (
     title: string,
@@ -189,7 +189,6 @@ const Deliveries: React.FC = () => {
           onSubmit={handleModalSubmit}
         />
       </div>
-      {/* <SemanticToastContainer position="bottom-right" /> */}
     </div>
   );
 };

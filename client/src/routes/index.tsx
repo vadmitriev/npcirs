@@ -7,16 +7,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-// import { MainLayout } from '../layouts';
 import MainLayout from '../layouts/main/MainLayout';
-
-// import {
-//   // DashboardPage,
-//   // DeliveriesPage,
-//   // LoginPage,
-//   NotFoundPage,
-//   // SignUpPage,
-// } from '../pages';
 
 import NotFoundPage from '../pages/NotFound/NotFound';
 
@@ -27,7 +18,7 @@ import DashboardPage from '../pages/Dashboard/Dashboard';
 import DeliveriesPage from '../pages/Deliveries/Deliveries';
 
 import { useAuth } from '../hooks/useAuth';
-import { authRoutes, privateRoutes, routeNames } from './routes';
+import { authRoutes, routeNames } from './routes';
 
 function RequireAuth() {
   const auth = useAuth();

@@ -11,7 +11,6 @@ import {
   Param,
   Delete,
   NotFoundException,
-  Patch,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,

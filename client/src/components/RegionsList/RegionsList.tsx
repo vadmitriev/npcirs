@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Input,
@@ -16,15 +16,13 @@ import {
 import useDebounce from '../../hooks/useDebounce';
 import { IRegion } from '../../interfaces/Region';
 
-import './RegionList.css';
+import './RegionsList.css';
 
 interface RegionsListProps {
   onChange: (region: IRegion) => void;
   data: IRegion[];
   activeItem: IRegion;
 }
-
-declare var Ext: any;
 
 const RegionsList: React.FC<RegionsListProps> = ({
   onChange,
@@ -40,12 +38,6 @@ const RegionsList: React.FC<RegionsListProps> = ({
     setItems(data);
     setFilteredItems(data);
   }, [data]);
-
-  const store = Ext.create('Ext.data.Store', {
-    autoLoad: true,
-    data: filteredItems,
-    sorters: ['p01'],
-  });
 
   const handleSearch = (
     _: React.ChangeEvent<HTMLInputElement>,

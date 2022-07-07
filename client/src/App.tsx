@@ -4,10 +4,6 @@ import { AuthProvider } from './hooks/useAuth';
 
 import Router from './routes';
 
-// import './App.css';
-
-declare var Ext: any;
-
 const App: React.FC = () => {
   return (
     <BrowserRouter>

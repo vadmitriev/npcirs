@@ -9,9 +9,9 @@ interface IAuth {
   isAuth: boolean;
   isLoading: boolean;
   error: any;
-  login: Function;
+  login: (data: ILoginData) => void;
   logout: () => void;
-  signup: Function;
+  signup: (data: ISignUpData) => void;
   clearError: () => void;
 }
 

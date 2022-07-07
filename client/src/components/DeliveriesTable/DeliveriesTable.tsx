@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
-import { Grid, Container } from '@sencha/ext-react-modern';
+import { Grid } from '@sencha/ext-react-modern';
 import {
-  Menu,
   Button,
   Message,
   ButtonGroup,
@@ -14,7 +13,7 @@ import { IOrganization } from '../../interfaces/Organization';
 
 import './DeliveriesTable.css';
 
-declare var Ext: any;
+declare let Ext: any;
 
 interface DeliveriesTableProps {
   data: IOrganization[];
@@ -31,13 +30,7 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
   onDeleteItem,
   onRefresh,
 }) => {
-  const handleUpdateRecord = (
-    newStore,
-    record,
-    operation,
-    modifiedFieldNames,
-    details,
-  ) => {
+  const handleUpdateRecord = (_, record, operation) => {
     if (operation === 'edit') {
       const item: IOrganization = record.data;
       onChangeItem(item);

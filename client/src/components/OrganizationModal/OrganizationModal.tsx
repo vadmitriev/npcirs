@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import {
   Button,
@@ -26,9 +26,6 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
 }) => {
   const [inputData, setInputData] = useState<IOrganization>(null);
 
-  const [currentField, setCurrentField] =
-    useState<keyof IOrganization>(null);
-
   const [errorData, setErrorData] =
     useState<KeysEnum<IOrganization>>(null);
 
@@ -39,67 +36,47 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
       return false;
     }
 
-    const clearErr = (key) => {
-      setErrorData({ ...errorData, [key]: null });
+    let hasErrors = false;
+
+    const setErr = (key: keyof IOrganization, text: string) => {
+      setErrorData({ ...errorData, [key]: text });
+      hasErrors = true;
     };
 
-    let hasErrors: boolean = false;
-    let key: keyof IOrganization = 'inn';
-
-    if (currentField === key) {
+    const setEmptyErr = (key: keyof IOrganization, text: string) => {
       if (!inputData[key]) {
-        setErrorData({ ...errorData, [key]: 'Не заполнен ИНН' });
-        hasErrors = true;
+        setErr(key, text);
       }
-      if (!isInn(inputData.inn)) {
-        setErrorData({
-          ...errorData,
-          [key]: 'Неправильно указан ИНН',
-        });
-        hasErrors = true;
-      } else {
-        // clearErr(key)
-      }
+    };
+
+    setEmptyErr('npp', 'Не указан порядковый номер');
+
+    setEmptyErr('inn', 'Не заполнен ИНН');
+
+    if (!isInn(inputData.inn)) {
+      setErr('inn', 'Неправильно указан ИНН');
     }
 
-    key = 'naim_org';
-    if (currentField === key) {
-      setErrorData({
-        ...errorData,
-        [key]: 'Не указано название организации',
-      });
-      hasErrors = true;
-    } else {
-      // clearErr(key)
-    }
+    setEmptyErr('naim_org', 'Не указано название организации');
 
-    key = 'adr_fact';
-    if (currentField === key) {
-      setErrorData({
-        ...errorData,
-        [key]: 'Не указан адрес организации',
-      });
-      hasErrors = true;
-    } else {
-      // clearErr(key)
-    }
+    setEmptyErr('adr_fact', 'Не указан адрес организации');
 
     return !hasErrors;
   };
 
-  useEffect(() => {
-    setIsValid(validate());
-  }, [inputData]);
-
   const handleChange = ({
     target: { id, value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentField(id as keyof IOrganization);
     setInputData({ ...inputData, [id]: value });
   };
 
   const handleSubmit = () => {
-    onSubmit(inputData);
+    const valid = validate();
+    setIsValid(valid);
+
+    if (valid) {
+      onSubmit(inputData);
+    }
   };
 
   const handleOnlyNumbers = (event) => {
@@ -108,27 +85,48 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     }
   };
 
+  const ErrorMessage = () => {
+    if (isValid || !errorData) {
+      return null;
+    }
+    return (
+      <Message
+        error
+        header="Ошибки в заполнении формы"
+        content={Object.keys(errorData).map(
+          (key) =>
+            errorData[key] && (
+              <React.Fragment key={key}>
+                <span>{errorData[key]}</span> <br />
+              </React.Fragment>
+            ),
+        )}
+      />
+    );
+  };
+
+  const isErrorField = (key: keyof IOrganization): boolean => {
+    return errorData && errorData[key] && errorData[key].length > 0;
+  };
+
   return (
     <div>
       <Modal onClose={onClose} open={visible}>
         <Modal.Header>Карточка объекта</Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            <Form>
+            <Form onSubmit={handleSubmit}>
               <Form.Group widths="equal">
                 <Form.Field
                   required
                   id="npp"
                   control="input"
+                  type="number"
                   label="Номер п.п"
                   placeholder="Порядковый номер"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
-                  error={
-                    errorData &&
-                    errorData.npp &&
-                    errorData.npp.length > 0
-                  }
+                  error={isErrorField('npp')}
                 />
                 <Popup
                   trigger={
@@ -136,15 +134,12 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                       required
                       id="inn"
                       control="input"
+                      type="number"
                       label="ИНН"
                       placeholder="ИНН организации"
                       onKeyPress={handleOnlyNumbers}
                       onChange={handleChange}
-                      error={
-                        errorData &&
-                        errorData.inn &&
-                        errorData.inn.length > 0
-                      }
+                      error={isErrorField('inn')}
                     />
                   }
                   content="Идентификационный номер налогоплательщика"
@@ -154,32 +149,27 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 required
                 id="naim_org"
                 control="input"
+                type="text"
                 label="Наименование"
                 placeholder="Наименование организации"
                 onChange={handleChange}
-                error={
-                  errorData &&
-                  errorData.naim_org &&
-                  errorData.naim_org.length > 0
-                }
+                error={isErrorField('naim_org')}
               />
               <Form.Field
                 required
                 id="adr_fact"
                 control="input"
+                type="text"
                 label="Фактический адрес"
                 placeholder="Адрес организации"
                 onChange={handleChange}
-                error={
-                  errorData &&
-                  errorData.adr_fact &&
-                  errorData.adr_fact.length > 0
-                }
+                error={isErrorField('adr_fact')}
               />
               <Form.Group widths="equal">
                 <Form.Field
                   id="plazma_max"
                   control="input"
+                  type="number"
                   label="Плазма макс"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -188,6 +178,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="plazma_cena"
                   control="input"
+                  type="number"
                   label="Плазма цена"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -196,6 +187,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="erm_max"
                   control="input"
+                  type="number"
                   label="Эр масса макс"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -204,6 +196,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="erm_cena"
                   control="input"
+                  type="number"
                   label="Эр масса цена"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -214,6 +207,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="immg_max"
                   control="input"
+                  type="number"
                   label="Им макс"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -222,6 +216,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="immg_cena"
                   control="input"
+                  type="number"
                   label="Им цена"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -230,6 +225,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="alb_max"
                   control="input"
+                  type="number"
                   label="Альб макс"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -238,6 +234,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 <Form.Field
                   id="alb_cena"
                   control="input"
+                  type="number"
                   label="Альб цена"
                   onKeyPress={handleOnlyNumbers}
                   onChange={handleChange}
@@ -245,20 +242,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 />
               </Form.Group>
             </Form>
-            {errorData && (
-              <Message
-                error
-                header="Ошибки в заполнении формы"
-                content={Object.keys(errorData).map(
-                  (key) =>
-                    errorData[key] && (
-                      <React.Fragment key={key}>
-                        <div>{errorData[key]}</div>
-                      </React.Fragment>
-                    ),
-                )}
-              />
-            )}
+            <ErrorMessage />
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>

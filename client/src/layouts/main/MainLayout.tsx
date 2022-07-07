@@ -1,11 +1,11 @@
-import React, { useState, createRef } from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   ErrorBoundary,
   Header,
   Sidebar as CustomSidebar,
 } from '../../components';
-import { Sidebar, Sticky } from 'semantic-ui-react';
+import { Sidebar } from 'semantic-ui-react';
 import 'react-semantic-toasts/styles/react-semantic-alert.css';
 
 import './MainLayout.css';

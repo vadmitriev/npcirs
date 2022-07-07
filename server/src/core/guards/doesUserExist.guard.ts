@@ -3,7 +3,6 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
-  Request,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { UsersService } from 'src/modules/users/users.service';
