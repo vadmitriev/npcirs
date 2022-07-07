@@ -69,4 +69,8 @@ export class RegionsService {
   async getCountRow(): Promise<number> {
     return await this.regionRepository.count();
   }
+
+  async loadWordFile(id: string) {
+    return;
+  }
 }

@@ -12,6 +12,7 @@ import {
 import { IOrganization } from '../../interfaces/Organization';
 
 import './DeliveriesTable.css';
+import { IRegion } from '../../interfaces/Region';
 
 declare let Ext: any;
 
@@ -21,8 +22,8 @@ interface DeliveriesTableProps {
   onDeleteItem: (ids: string[]) => void;
   onChangeItem: (item: IOrganization) => void;
   onRefresh: () => void;
-  onUploadFile: () => void;
-  onSaveFile: (data: IOrganization[]) => void;
+  onSaveFile: () => void;
+  currentRegion: IRegion;
 }
 
 const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
@@ -32,7 +33,7 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
   onDeleteItem,
   onRefresh,
   onSaveFile,
-  onUploadFile,
+  currentRegion,
 }) => {
   const handleUpdateRecord = (_, record, operation) => {
     if (operation === 'edit') {
@@ -63,16 +64,6 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
     });
 
     onDeleteItem(ids);
-  };
-
-  const handleSaveFile = () => {
-    const grid = gridRef.current.cmp;
-    const records = grid.dataRange && grid.dataRange.records;
-    if (records && records.length > 0) {
-      const items = records.map((item) => item.data);
-
-      onSaveFile(items);
-    }
   };
 
   const handleUpdate = (hm, hm2, hm3) => {
@@ -205,22 +196,16 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           </Button>
         </ButtonGroup>
         <ButtonGroup floated="right">
-          <Button
-            primary
-            icon
-            onClick={onUploadFile}
-            style={{ marginLeft: '10px' }}
-          >
-            <Icon name="upload" />
-          </Button>
-          <Button
-            primary
-            icon
-            onClick={handleSaveFile}
-            style={{ marginLeft: '10px' }}
-          >
-            <Icon name="save" />
-          </Button>
+          {currentRegion && (
+            <Button
+              primary
+              icon
+              onClick={onSaveFile}
+              style={{ marginLeft: '10px' }}
+            >
+              <Icon name="save" />
+            </Button>
+          )}
           <Button
             icon
             onClick={onRefresh}

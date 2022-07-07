@@ -7,6 +7,8 @@ import {
   NotFoundException,
   Param,
   Post,
+  UseGuards,
+  StreamableFile,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -18,6 +20,9 @@ import {
 import { IRegionQuery } from './interfaces/regionQuery.interface';
 import { RegionsService } from './regions.service';
 import { Region } from './region.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @ApiBearerAuth()
 @ApiTags('regions')
@@ -68,5 +73,18 @@ export class RegionsController {
     }
 
     return 'Successfully deleted';
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id/word')
+  @ApiOperation({ summary: 'Get word file with table' })
+  @ApiResponse({
+    status: 200,
+    description: 'Formed word file with table',
+  })
+  loadWord(@Param(':id') id: string): StreamableFile {
+    const file = createReadStream(join(process.cwd(), '.prettierrc'));
+    return new StreamableFile(file);
+    // return await this.regionService.loadWordFile(id);
   }
 }

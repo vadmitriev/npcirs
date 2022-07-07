@@ -7,6 +7,9 @@ import {
   Loader,
   SemanticICONS,
 } from 'semantic-ui-react';
+
+import { saveAs } from 'file-saver';
+
 import OrganizationService from '../../services/OrganizationService';
 import RegionService from '../../services/RegionService';
 import {
@@ -70,6 +73,7 @@ const Deliveries: React.FC = () => {
       })
       .catch((err) => {
         setError(err);
+        console.log(err);
         showToast('Произошла ошибка');
       })
       .finally(() => setIsLoading(false));
@@ -85,6 +89,7 @@ const Deliveries: React.FC = () => {
     loadOrganizationData()
       .catch((err) => {
         setError(err);
+        console.log(err);
         showToast('Произошла ошибка');
       })
       .finally(() => setIsLoading(false));
@@ -104,6 +109,7 @@ const Deliveries: React.FC = () => {
       .then(loadOrganizationData)
       .catch((err) => {
         setError(err);
+        console.log(err);
         showToast('Произошла ошибка');
       })
       .finally(() => setIsLoading(false));
@@ -131,6 +137,7 @@ const Deliveries: React.FC = () => {
       .catch((err) => {
         setIsLoading(false);
         setError(err);
+        console.log(err);
         showToast('Произошла ошибка при удалении', 'error');
       });
   };
@@ -140,17 +147,36 @@ const Deliveries: React.FC = () => {
     OrganizationService.update(currentRegion.p00, newItem).catch(
       (err) => {
         setError(err);
+        console.log(err);
         showToast('Произошла ошибка');
       },
     );
   };
 
-  const handleUploadFile = () => {
-    console.log('upload file');
-  };
+  const handleSaveFile = async () => {
+    if (!currentRegion) {
+      showToast('Не выбран регион', 'info');
+      return;
+    }
+    setIsLoading(true);
+    RegionService.loadWord(currentRegion.p00)
+      .then((res) => {
+        setIsLoading(false);
 
-  const handleSaveFile = (data: IOrganization[]) => {
-    console.log('save file', data);
+        const fileName = `${
+          currentRegion.p01
+        }-донорские-организации-${new Date()
+          .toISOString()
+          .slice(0, 10)}.docx`;
+
+        saveAs(res.data, fileName);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err);
+        console.log(err);
+        showToast('Произошла ошибка');
+      });
   };
 
   return (
@@ -188,8 +214,8 @@ const Deliveries: React.FC = () => {
             onDeleteItem={handleDeleteItem}
             onChangeItem={handleTableChange}
             onRefresh={loadOrganizationData}
-            onUploadFile={handleUploadFile}
             onSaveFile={handleSaveFile}
+            currentRegion={currentRegion}
           />
         </div>
 
