@@ -1,4 +1,4 @@
-import api from './http';
+import api from '../api/http';
 import { IRegion, RegionResponse } from '../interfaces/Region';
 import { AxiosResponse } from 'axios';
 

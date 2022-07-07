@@ -20,6 +20,7 @@ export class OrganizationService {
   ): Promise<{ count: number; data: Organization[] }> {
     const data = await this.organizationRepository.findAll({
       where: { [REGION_ID_COL_NAME]: regionId },
+      order: [['updatedAt', 'DESC']],
     });
     const count = await this.getRowCount(regionId);
 

@@ -7,8 +7,8 @@ import {
   Loader,
   SemanticICONS,
 } from 'semantic-ui-react';
-import OrganizationService from '../../api/OrganizationService';
-import RegionService from '../../api/RegionService';
+import OrganizationService from '../../services/OrganizationService';
+import RegionService from '../../services/RegionService';
 import {
   DeliveriesTable,
   OrganizationModal,
@@ -18,7 +18,7 @@ import { IOrganization } from '../../interfaces/Organization';
 import { IRegion } from '../../interfaces/Region';
 
 const Deliveries: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [regionData, setRegionData] = useState<IRegion[]>([]);
   const [organizationData, setOrganizationData] = useState([]);
   const [currentRegion, setCurrentRegion] = useState<IRegion>(null);
@@ -97,11 +97,11 @@ const Deliveries: React.FC = () => {
   const handleModalSubmit = (data: IOrganization) => {
     setModalVisible(true);
 
-    OrganizationService.create(currentRegion.p00, data)
-      .then(loadOrganizationData)
+    OrganizationService.create(data.r1022, data)
       .then(() => {
         showToast('Организация добавлена', 'success');
       })
+      .then(loadOrganizationData)
       .catch((err) => {
         setError(err);
         showToast('Произошла ошибка');
@@ -145,6 +145,14 @@ const Deliveries: React.FC = () => {
     );
   };
 
+  const handleUploadFile = () => {
+    console.log('upload file');
+  };
+
+  const handleSaveFile = (data: IOrganization[]) => {
+    console.log('save file', data);
+  };
+
   return (
     <div>
       <Dimmer active={isLoading}>
@@ -180,6 +188,8 @@ const Deliveries: React.FC = () => {
             onDeleteItem={handleDeleteItem}
             onChangeItem={handleTableChange}
             onRefresh={loadOrganizationData}
+            onUploadFile={handleUploadFile}
+            onSaveFile={handleSaveFile}
           />
         </div>
 
@@ -187,6 +197,7 @@ const Deliveries: React.FC = () => {
           visible={modalVisible}
           onClose={handleModalClose}
           onSubmit={handleModalSubmit}
+          regionsData={regionData}
         />
       </div>
     </div>

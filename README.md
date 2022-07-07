@@ -1,1 +1,3 @@
-# Fullstack приложение на Nest.js, React, ExtReact
+# Fullstack приложение на Nest.js, React, Typescript
+
+Веб-приложение представляет собой 

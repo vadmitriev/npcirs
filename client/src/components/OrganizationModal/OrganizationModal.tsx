@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -10,8 +10,10 @@ import {
 import { IOrganization } from '../../interfaces/Organization';
 
 import isInn from 'is-inn-js';
+import { IRegion } from '../../interfaces/Region';
 
 interface OrganizationModalProps {
+  regionsData: IRegion[];
   visible: boolean;
   onClose: () => void;
   onSubmit: (data: IOrganization) => void;
@@ -23,6 +25,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
   visible,
   onClose,
   onSubmit,
+  regionsData = [],
 }) => {
   const [inputData, setInputData] = useState<IOrganization>(null);
 
@@ -30,6 +33,17 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     useState<KeysEnum<IOrganization>>(null);
 
   const [isValid, setIsValid] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (inputData) {
+      const fieldsNotEmpty =
+        !!inputData['npp'] &&
+        !!inputData['inn'] &&
+        !!inputData['adr_fact'] &&
+        !!inputData['naim_org'];
+      setIsValid(fieldsNotEmpty);
+    }
+  }, [inputData]);
 
   const validate = () => {
     if (!inputData) {
@@ -64,6 +78,29 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     return !hasErrors;
   };
 
+  const setNonRequiredFields = () => {
+    const newData = { ...inputData };
+
+    const numericFields = [
+      'plazma_max',
+      'plazma_cena',
+      'erm_max',
+      'erm_cena',
+      'immg_max',
+      'immg_cena',
+      'alb_max',
+      'alb_cena',
+    ];
+
+    numericFields.forEach((field) => {
+      if (!newData[field]) {
+        newData[field] = 0;
+      }
+    });
+
+    return newData;
+  };
+
   const handleChange = ({
     target: { id, value },
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,13 +112,22 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     setIsValid(valid);
 
     if (valid) {
-      onSubmit(inputData);
+      const newData = setNonRequiredFields();
+      setErrorData(null);
+      onSubmit(newData);
     }
   };
 
   const handleOnlyNumbers = (event) => {
     if (!/[0-9]/.test(event.key)) {
       event.preventDefault();
+    }
+  };
+
+  const handleSearchChange = (_, data) => {
+    if (data.value) {
+      const region = regionsData[data.value];
+      setInputData({ ...inputData, r1022: region.p00 });
     }
   };
 
@@ -109,6 +155,12 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     return errorData && errorData[key] && errorData[key].length > 0;
   };
 
+  const regionOptions = regionsData.map((region, idx) => ({
+    key: region.p00,
+    text: region.p01,
+    value: idx,
+  }));
+
   return (
     <div>
       <Modal onClose={onClose} open={visible}>
@@ -116,11 +168,22 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
         <Modal.Content>
           <Modal.Description>
             <Form onSubmit={handleSubmit}>
+              <Form.Dropdown
+                id="r1022"
+                label="Субъект"
+                placeholder="Выбор субъекта РФ"
+                clearable
+                fluid
+                search
+                selection
+                options={regionOptions}
+                onChange={handleSearchChange}
+                noResultsMessage="Не удалось ничего найти"
+              />
               <Form.Group widths="equal">
-                <Form.Field
+                <Form.Input
                   required
                   id="npp"
-                  control="input"
                   type="number"
                   label="Номер п.п"
                   placeholder="Порядковый номер"
@@ -130,10 +193,9 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 />
                 <Popup
                   trigger={
-                    <Form.Field
+                    <Form.Input
                       required
                       id="inn"
-                      control="input"
                       type="number"
                       label="ИНН"
                       placeholder="ИНН организации"
@@ -145,20 +207,18 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                   content="Идентификационный номер налогоплательщика"
                 />
               </Form.Group>
-              <Form.Field
+              <Form.Input
                 required
                 id="naim_org"
-                control="input"
                 type="text"
                 label="Наименование"
                 placeholder="Наименование организации"
                 onChange={handleChange}
                 error={isErrorField('naim_org')}
               />
-              <Form.Field
+              <Form.Input
                 required
                 id="adr_fact"
-                control="input"
                 type="text"
                 label="Фактический адрес"
                 placeholder="Адрес организации"
@@ -166,79 +226,120 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
                 error={isErrorField('adr_fact')}
               />
               <Form.Group widths="equal">
-                <Form.Field
-                  id="plazma_max"
-                  control="input"
-                  type="number"
-                  label="Плазма макс"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="plazma_max"
+                      type="number"
+                      label="Плазма макс"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Плазма свежезамор."
+                  content="Макс. об. (тыс. литров)"
                 />
-                <Form.Field
-                  id="plazma_cena"
-                  control="input"
-                  type="number"
-                  label="Плазма цена"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="plazma_cena"
+                      type="number"
+                      label="Плазма цена"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Плазма свежезамор."
+                  content="Цена (тыс. руб. за один литр)"
                 />
-                <Form.Field
-                  id="erm_max"
-                  control="input"
-                  type="number"
-                  label="Эр масса макс"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="erm_max"
+                      type="number"
+                      label="Эр масса макс"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Эритроцитарная масса"
+                  content="Макс. об. (тыс. литров)"
                 />
-                <Form.Field
-                  id="erm_cena"
-                  control="input"
-                  type="number"
-                  label="Эр масса цена"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="erm_cena"
+                      type="number"
+                      label="Эр масса цена"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Эритроцитарная масса"
+                  content="Цена (тыс. руб. за один литр)"
                 />
               </Form.Group>
+
               <Form.Group widths="equal">
-                <Form.Field
-                  id="immg_max"
-                  control="input"
-                  type="number"
-                  label="Им макс"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="immg_max"
+                      type="number"
+                      label="Им макс"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Иммуноглобулин человека"
+                  content="Макс. об. (тыс. литров)"
                 />
-                <Form.Field
-                  id="immg_cena"
-                  control="input"
-                  type="number"
-                  label="Им цена"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="immg_cena"
+                      type="number"
+                      label="Им цена"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Иммуноглобулин человека"
+                  content="Цена (тыс. руб. за один литр)"
                 />
-                <Form.Field
-                  id="alb_max"
-                  control="input"
-                  type="number"
-                  label="Альб макс"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="alb_max"
+                      type="number"
+                      label="Альб макс"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Альбумин 10-процентный"
+                  content="Макс. об. (тыс. литров)"
                 />
-                <Form.Field
-                  id="alb_cena"
-                  control="input"
-                  type="number"
-                  label="Альб цена"
-                  onKeyPress={handleOnlyNumbers}
-                  onChange={handleChange}
-                  placeholder="Введите число"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      id="alb_cena"
+                      type="number"
+                      label="Альб цена"
+                      onKeyPress={handleOnlyNumbers}
+                      onChange={handleChange}
+                      placeholder="Введите число"
+                    />
+                  }
+                  header="Альбумин 10-процентный"
+                  content="Цена (тыс. руб. за один литр)"
                 />
               </Form.Group>
             </Form>

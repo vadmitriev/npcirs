@@ -21,6 +21,8 @@ interface DeliveriesTableProps {
   onDeleteItem: (ids: string[]) => void;
   onChangeItem: (item: IOrganization) => void;
   onRefresh: () => void;
+  onUploadFile: () => void;
+  onSaveFile: (data: IOrganization[]) => void;
 }
 
 const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
@@ -29,6 +31,8 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
   onChangeItem,
   onDeleteItem,
   onRefresh,
+  onSaveFile,
+  onUploadFile,
 }) => {
   const handleUpdateRecord = (_, record, operation) => {
     if (operation === 'edit') {
@@ -61,6 +65,16 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
     onDeleteItem(ids);
   };
 
+  const handleSaveFile = () => {
+    const grid = gridRef.current.cmp;
+    const records = grid.dataRange && grid.dataRange.records;
+    if (records && records.length > 0) {
+      const items = records.map((item) => item.data);
+
+      onSaveFile(items);
+    }
+  };
+
   const handleUpdate = (hm, hm2, hm3) => {
     console.log(hm, hm2, hm3);
   };
@@ -89,6 +103,7 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'inn',
           editable: true,
           draggable: false,
+          format: 'number',
         },
       ],
     },
@@ -101,12 +116,14 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'plazma_max',
           editable: true,
           draggable: false,
+          format: 'number',
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'plazma_cena',
           editable: true,
           draggable: false,
+          format: 'number',
         },
       ],
     },
@@ -119,12 +136,14 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'erm_max',
           editable: true,
           draggable: false,
+          format: 'number',
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'erm_cena',
           editable: true,
           draggable: false,
+          format: 'number',
         },
       ],
     },
@@ -137,12 +156,14 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'immg_max',
           editable: true,
           draggable: false,
+          format: 'number',
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'immg_cena',
           editable: true,
           draggable: false,
+          format: 'number',
         },
       ],
     },
@@ -155,12 +176,14 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'alb_max',
           editable: true,
           draggable: false,
+          format: 'number',
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'alb_cena',
           editable: true,
           draggable: false,
+          format: 'number',
         },
       ],
     },
@@ -181,9 +204,31 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
             Удалить
           </Button>
         </ButtonGroup>
-        <Button icon floated="right" onClick={onRefresh}>
-          <Icon name="refresh" />
-        </Button>
+        <ButtonGroup floated="right">
+          <Button
+            primary
+            icon
+            onClick={onUploadFile}
+            style={{ marginLeft: '10px' }}
+          >
+            <Icon name="upload" />
+          </Button>
+          <Button
+            primary
+            icon
+            onClick={handleSaveFile}
+            style={{ marginLeft: '10px' }}
+          >
+            <Icon name="save" />
+          </Button>
+          <Button
+            icon
+            onClick={onRefresh}
+            style={{ marginLeft: '10px' }}
+          >
+            <Icon name="refresh" />
+          </Button>
+        </ButtonGroup>
       </Message>
       <Segment style={{ height: '75vh' }}>
         <Grid
@@ -198,7 +243,6 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           selectable={{ checkbox: true }}
           columnResize={false}
           columns={columns}
-          // onEdit={handleUpdate}
           onUpdateData={handleUpdate}
         />
       </Segment>

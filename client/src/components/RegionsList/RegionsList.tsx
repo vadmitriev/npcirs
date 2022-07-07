@@ -29,10 +29,10 @@ const RegionsList: React.FC<RegionsListProps> = ({
   activeItem,
   data = [],
 }) => {
-  const [items, setItems] = useState(data);
-  const [filteredItems, setFilteredItems] = useState(data);
-  const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query, 500);
+  const [items, setItems] = useState<IRegion[]>(data);
+  const [filteredItems, setFilteredItems] = useState<IRegion[]>(data);
+  const [query, setQuery] = useState<string>('');
+  const debouncedQuery = useDebounce<typeof query>(query, 500);
 
   useEffect(() => {
     setItems(data);

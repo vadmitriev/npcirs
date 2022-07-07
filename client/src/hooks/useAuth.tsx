@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext } from 'react';
-import AuthService from '../api/AuthService';
+import AuthService from '../services/AuthService';
 import { TOKEN } from '../utils/constants/intex';
 import { ILoginData, ISignUpData } from '../interfaces/Auth';
 import { IUser } from '../interfaces/User';
