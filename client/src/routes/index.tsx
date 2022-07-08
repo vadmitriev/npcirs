@@ -18,7 +18,7 @@ import DashboardPage from '../pages/Dashboard/Dashboard';
 import DeliveriesPage from '../pages/Deliveries/Deliveries';
 
 import { useAuth } from '../hooks/useAuth';
-import { authRoutes, routeNames } from './routes';
+import { routeNames } from './routes';
 
 function RequireAuth() {
   const auth = useAuth();

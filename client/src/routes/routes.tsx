@@ -19,19 +19,6 @@ interface IRoute {
   icon?: string;
 }
 
-export const authRoutes: IRoute[] = [
-  {
-    name: 'Вход',
-    path: routeNames.LOGIN,
-    element: LoginPage,
-  },
-  {
-    name: 'Регистрация',
-    path: routeNames.SIGNUP,
-    element: SignUpPage,
-  },
-];
-
 export const privateRoutes: IRoute[] = [
   {
     name: 'Главная',

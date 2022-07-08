@@ -5,6 +5,9 @@ import {
   InputOnChangeData,
   Icon,
   Message,
+  Search,
+  Label,
+  Header,
 } from 'semantic-ui-react';
 import {
   AutoSizer,
@@ -17,6 +20,8 @@ import useDebounce from '../../hooks/useDebounce';
 import { IRegion } from '../../interfaces/Region';
 
 import './RegionsList.css';
+import { useMediaQuery } from 'react-responsive';
+import { isDesktopQuery } from '../../utils/responsive';
 
 interface RegionsListProps {
   onChange: (region: IRegion) => void;
@@ -34,6 +39,17 @@ const RegionsList: React.FC<RegionsListProps> = ({
   const [query, setQuery] = useState<string>('');
   const debouncedQuery = useDebounce<typeof query>(query, 500);
 
+  const isDesktop = useMediaQuery({ query: isDesktopQuery });
+
+  const initialSearchState = {
+    loading: false,
+    results: [],
+    value: '',
+  };
+  const [searchState, setSearchState] = useState<
+    typeof initialSearchState
+  >(initialSearchState);
+
   useEffect(() => {
     setItems(data);
     setFilteredItems(data);
@@ -47,12 +63,19 @@ const RegionsList: React.FC<RegionsListProps> = ({
     setQuery(text);
   };
 
+  const findRegionByQuery = (
+    data: IRegion[],
+    query: string,
+  ): IRegion[] => {
+    return data.filter(
+      (item) =>
+        item.p01 &&
+        item.p01.toLowerCase().includes(query.toLowerCase()),
+    );
+  };
+
   useEffect(() => {
-    const newItems = items.filter((item) => {
-      return (
-        item.p01 && item.p01.toLowerCase().includes(debouncedQuery)
-      );
-    });
+    const newItems = findRegionByQuery(items, debouncedQuery);
     setFilteredItems(newItems);
   }, [debouncedQuery]);
 
@@ -97,6 +120,66 @@ const RegionsList: React.FC<RegionsListProps> = ({
   const clearIcon = query.length && (
     <Icon name="x" className="clear-icon" onClick={clearSearch} />
   );
+
+  const handleResultsSearch = (_, data) => {
+    setSearchState({
+      results: searchState.results,
+      loading: true,
+      value: data.value,
+    });
+
+    if (data.value.length < 1) {
+      return setSearchState(initialSearchState);
+    }
+
+    setTimeout(() => {
+      const filteredResults = findRegionByQuery(
+        items,
+        searchState.value,
+      );
+
+      setSearchState({
+        loading: false,
+        results: filteredResults,
+        value: data.value,
+      });
+    }, 300);
+  };
+
+  const resultRenderer = (item) => (
+    <Label key={item.p00} content={item.p01} />
+  );
+
+  const handleResultSelect = (_, data) => {
+    setSearchState({ ...searchState, value: data.result.p01 });
+    const item = items.find((item) => item.p00 === data.result.p00);
+    onChange(item);
+  };
+
+  if (!isDesktop) {
+    return (
+      <Container textAlign="center">
+        <Search
+          size="huge"
+          fluid
+          minCharacters={3}
+          loading={searchState.loading}
+          results={searchState.results}
+          value={searchState.value}
+          placeholder="Поиск субъекта"
+          onSearchChange={handleResultsSearch}
+          onResultSelect={handleResultSelect}
+          resultRenderer={resultRenderer}
+        />
+        {activeItem && (
+          <Header
+            as="h3"
+            content={`Выбранный субъект: ${activeItem.p01}`}
+          />
+        )}
+      </Container>
+    );
+  }
 
   return (
     <div className="list-wrapper">

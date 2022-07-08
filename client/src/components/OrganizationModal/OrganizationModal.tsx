@@ -112,7 +112,6 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
 
   const handleSubmit = () => {
     const valid = validate();
-    // setIsValid(valid);
 
     if (valid) {
       const newData = setNonRequiredFields();

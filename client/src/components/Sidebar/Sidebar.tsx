@@ -10,6 +10,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { privateRoutes } from '../../routes/routes';
 import { useMediaQuery } from 'react-responsive';
+import { isDesktopQuery } from '../../utils/responsive';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
   const location = useLocation();
-  const isDesktop = useMediaQuery({ query: '(min-width: 1224px)' });
+  const isDesktop = useMediaQuery({ query: isDesktopQuery });
 
   useEffect(() => {
     if (!isDesktop && isOpen) {

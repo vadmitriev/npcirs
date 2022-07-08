@@ -1,5 +1,5 @@
-import { IOrganization } from './../interfaces/Organization';
-import { IRegion } from './../interfaces/Region';
+import { IOrganization } from '../../interfaces/Organization';
+import { IRegion } from '../../interfaces/Region';
 import {
   AlignmentType,
   Document,

@@ -7,6 +7,7 @@ import {
   Loader,
   SemanticICONS,
   Header,
+  Grid,
 } from 'semantic-ui-react';
 
 import { saveAs } from 'file-saver';
@@ -21,31 +22,26 @@ import {
 
 import { IOrganization } from '../../interfaces/Organization';
 import { IRegion } from '../../interfaces/Region';
-import DocumentCreator from '../../packages/DocumentCreator';
+import DocumentCreator from '../../packages/DocumentCreator/DocumentCreator';
 import { Packer } from 'docx';
-import {
-  achievements,
-  education,
-  experiences,
-  skills,
-} from '../../services/data';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+
+import { useNavigate, useParams } from 'react-router-dom';
 import { routeNames } from '../../routes/routes';
+import { REGIONS } from '../../utils/constants/intex';
+import { useMediaQuery } from 'react-responsive';
+import { isDesktopQuery } from '../../utils/responsive';
 
 const Deliveries: React.FC = () => {
   const navigator = useNavigate();
   const params = useParams();
+
+  const isDesktop = useMediaQuery({ query: isDesktopQuery });
 
   const [modalVisible, setModalVisible] = useState(false);
   const [regionData, setRegionData] = useState<IRegion[]>([]);
   const [organizationData, setOrganizationData] = useState([]);
   const [currentRegion, setCurrentRegion] = useState<IRegion>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [, setError] = useState(null);
 
   const showToast = (
     title: string,
@@ -99,12 +95,19 @@ const Deliveries: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
 
+    const cache = sessionStorage.getItem(REGIONS);
+    if (cache) {
+      setRegionData(JSON.parse(cache));
+      setIsLoading(false);
+      return;
+    }
+
     RegionService.load()
-      .then((result) => {
-        setRegionData(result.data.data);
+      .then(({ data }) => {
+        setRegionData(data.data);
+        sessionStorage.setItem(REGIONS, JSON.stringify(data.data));
       })
       .catch((err) => {
-        setError(err);
         console.log(err);
         showToast('Произошла ошибка');
       })
@@ -120,7 +123,6 @@ const Deliveries: React.FC = () => {
 
     loadOrganizationData()
       .catch((err) => {
-        setError(err);
         console.log(err);
         showToast('Произошла ошибка');
       })
@@ -140,7 +142,6 @@ const Deliveries: React.FC = () => {
       })
       .then(loadOrganizationData)
       .catch((err) => {
-        setError(err);
         console.log(err);
         showToast('Произошла ошибка');
       })
@@ -170,7 +171,7 @@ const Deliveries: React.FC = () => {
       .then(() => setIsLoading(false))
       .catch((err) => {
         setIsLoading(false);
-        setError(err);
+
         console.log(err);
         showToast('Произошла ошибка при удалении', 'error');
       });
@@ -180,7 +181,6 @@ const Deliveries: React.FC = () => {
     console.log('update', newItem);
     OrganizationService.update(currentRegion.p00, newItem).catch(
       (err) => {
-        setError(err);
         console.log(err);
         showToast('Произошла ошибка');
       },
@@ -214,10 +214,54 @@ const Deliveries: React.FC = () => {
       })
       .catch((err) => {
         setIsLoading(false);
-        setError(err);
+
         console.log(err);
         showToast('Произошла ошибка');
       });
+  };
+
+  const Regions = () => {
+    return (
+      <RegionsList
+        onChange={handleRegionChange}
+        data={regionData}
+        activeItem={currentRegion}
+      />
+    );
+  };
+
+  const Content = () => {
+    return currentRegion ? (
+      <DeliveriesTable
+        data={organizationData}
+        onAddItem={() => setModalVisible(true)}
+        onDeleteItem={handleDeleteItem}
+        onChangeItem={handleTableChange}
+        onRefresh={loadOrganizationData}
+        onSaveFile={handleSaveFile}
+        currentRegion={currentRegion}
+      />
+    ) : (
+      <div
+        style={{
+          width: '80%',
+          height: '100%',
+          position: 'relative',
+        }}
+      >
+        <Header
+          as="h2"
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            transform: 'translate(0, -50%)',
+            marginTop: '10%',
+          }}
+        >
+          Выберите регион из списка
+        </Header>
+      </div>
+    );
   };
 
   return (
@@ -237,60 +281,32 @@ const Deliveries: React.FC = () => {
         </p>
       </Message>
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-        }}
-      >
-        <RegionsList
-          onChange={handleRegionChange}
-          data={regionData}
-          activeItem={currentRegion}
-        />
-        {/* <div style={{ width: '100%' }}> */}
-        {currentRegion ? (
-          <DeliveriesTable
-            data={organizationData}
-            onAddItem={() => setModalVisible(true)}
-            onDeleteItem={handleDeleteItem}
-            onChangeItem={handleTableChange}
-            onRefresh={loadOrganizationData}
-            onSaveFile={handleSaveFile}
-            currentRegion={currentRegion}
-          />
-        ) : (
-          <div
-            style={{
-              width: '80%',
-              height: '100%',
-              position: 'relative',
-            }}
-          >
-            <Header
-              as="h2"
-              style={{
-                width: '100%',
-                textAlign: 'center',
-                // position: 'absolute',
-                // top: '50%',
-                transform: 'translate(0, -50%)',
-                marginTop: '10%',
-              }}
-            >
-              Выберите регион из списка
-            </Header>
-          </div>
-        )}
-
-        {/* </div> */}
-
-        <OrganizationModal
-          visible={modalVisible}
-          onClose={handleModalClose}
-          onSubmit={handleModalSubmit}
-        />
-      </div>
+      {isDesktop ? (
+        <Grid columns={2}>
+          <Grid.Column width={3}>
+            <Regions />
+          </Grid.Column>
+          <Grid.Column width={13}>
+            <Content />
+          </Grid.Column>
+        </Grid>
+      ) : (
+        <Grid>
+          <Grid.Row>
+            <Regions />
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Content />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      )}
+      <OrganizationModal
+        visible={modalVisible}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
     </div>
   );
 };
