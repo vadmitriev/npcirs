@@ -4,17 +4,17 @@
 
 .page {
 	padding: 1rem 5rem 2rem 10%;
-	height: 95vh;
-	width: 100%;
+	/* height: 95vh; */
+	/* width: 100%; */
 }
 
 .pushable {
 	height: 100vh;
 }
 
-.pusher > div {
+/* .pusher > div {
 	position: absolute;
 	
 	width: 100%;
 	margin-left: 5%;
-}
+} */

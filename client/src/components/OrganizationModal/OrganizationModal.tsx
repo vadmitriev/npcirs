@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Button,
   Modal,
@@ -10,11 +10,11 @@ import {
 import { IOrganization } from '../../interfaces/Organization';
 
 import isInn from 'is-inn-js';
-import { IRegion } from '../../interfaces/Region';
 import { isNumeric } from '../../utils/validation';
 
+import './OrganizationModal.css';
+
 interface OrganizationModalProps {
-  regionsData: IRegion[];
   visible: boolean;
   onClose: () => void;
   onSubmit: (data: IOrganization) => void;
@@ -26,61 +26,63 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
   visible,
   onClose,
   onSubmit,
-  regionsData = [],
 }) => {
   const [inputData, setInputData] = useState<IOrganization>(null);
-
   const [errorData, setErrorData] =
     useState<KeysEnum<IOrganization>>(null);
 
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const params = useParams();
 
-  useEffect(() => {
-    if (inputData) {
-      const fieldsNotEmpty =
-        !!inputData['npp'] &&
-        !!inputData['inn'] &&
-        !!inputData['adr_fact'] &&
-        !!inputData['naim_org'];
-      setIsValid(fieldsNotEmpty);
-    }
-  }, [inputData]);
+  const handleClose = () => {
+    setErrorData(null);
+    setInputData(null);
+    onClose();
+  };
 
   const validate = () => {
+    const notEmptyErrors = {
+      npp: 'Не указан порядковый номер',
+      inn: 'Не заполнен ИНН',
+      adr_fact: 'Не указано название организации',
+      naim_org: 'Не указан адрес организации',
+    };
+
+    const setEmptyErrors = () => {
+      const errors = {};
+      Object.keys(notEmptyErrors).forEach((key) => {
+        if (!inputData || !inputData[key]) {
+          errors[key] = notEmptyErrors[key];
+        } else {
+          errors[key] = '';
+        }
+      });
+      setErrorData({ ...errorData, ...errors });
+      return errors;
+    };
+
     if (!inputData) {
+      setEmptyErrors();
       return false;
     }
 
-    let hasErrors = false;
+    const emptyErrors = setEmptyErrors();
 
-    const setErr = (key: keyof IOrganization, text: string) => {
-      setErrorData({ ...errorData, [key]: text });
-      hasErrors = true;
-    };
-
-    const setEmptyErr = (key: keyof IOrganization, text: string) => {
-      if (!inputData[key]) {
-        setErr(key, text);
-      }
-    };
-
-    setEmptyErr('npp', 'Не указан порядковый номер');
-
-    setEmptyErr('inn', 'Не заполнен ИНН');
-
-    if (!isInn(inputData.inn)) {
-      setErr('inn', 'Неправильно указан ИНН');
+    if (!isInn(inputData.inn) && !emptyErrors['inn']) {
+      setErrorData({ ...errorData, inn: 'Неправильно указан ИНН' });
+      return false;
     }
 
-    setEmptyErr('naim_org', 'Не указано название организации');
+    const errors = Object.keys(emptyErrors).filter(
+      (key) => emptyErrors[key] !== '',
+    );
 
-    setEmptyErr('adr_fact', 'Не указан адрес организации');
-
-    return !hasErrors;
+    return errors.length === 0;
   };
 
   const setNonRequiredFields = () => {
     const newData = { ...inputData };
+
+    newData.r1022 = params.id;
 
     const numericFields = [
       'plazma_max',
@@ -110,7 +112,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
 
   const handleSubmit = () => {
     const valid = validate();
-    setIsValid(valid);
+    // setIsValid(valid);
 
     if (valid) {
       const newData = setNonRequiredFields();
@@ -125,15 +127,8 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     }
   };
 
-  const handleSearchChange = (_, data) => {
-    if (data.value) {
-      const region = regionsData[data.value];
-      setInputData({ ...inputData, r1022: region.p00 });
-    }
-  };
-
   const ErrorMessage = () => {
-    if (isValid || !errorData) {
+    if (!errorData) {
       return null;
     }
     return (
@@ -156,31 +151,13 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
     return errorData && errorData[key] && errorData[key].length > 0;
   };
 
-  const regionOptions = regionsData.map((region, idx) => ({
-    key: region.p00,
-    text: region.p01,
-    value: idx,
-  }));
-
   return (
     <div>
-      <Modal onClose={onClose} open={visible}>
+      <Modal onClose={handleClose} open={visible}>
         <Modal.Header>Карточка объекта</Modal.Header>
         <Modal.Content>
           <Modal.Description>
             <Form onSubmit={handleSubmit}>
-              <Form.Dropdown
-                id="r1022"
-                label="Субъект"
-                placeholder="Выбор субъекта РФ"
-                clearable
-                fluid
-                search
-                selection
-                options={regionOptions}
-                onChange={handleSearchChange}
-                noResultsMessage="Не удалось ничего найти"
-              />
               <Form.Group widths="equal">
                 <Form.Input
                   required
@@ -360,7 +337,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
             icon="checkmark"
             onClick={handleSubmit}
             positive
-            disabled={!isValid}
+            // disabled={!isValid}
           />
         </Modal.Actions>
       </Modal>

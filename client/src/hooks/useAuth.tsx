@@ -1,4 +1,9 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, {
+  useState,
+  useContext,
+  createContext,
+  useEffect,
+} from 'react';
 import AuthService from '../services/AuthService';
 import { TOKEN } from '../utils/constants/intex';
 import { ILoginData, ISignUpData } from '../interfaces/Auth';
@@ -38,6 +43,19 @@ function useProvideAuth() {
 
   const [error, setError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  setTimeout(() => checkAuth(), 3000);
+
+  useEffect(() => {
+    checkAuth();
+  }, [isAuth]);
+
+  const checkAuth = () => {
+    const token = localStorage.getItem(TOKEN);
+    if (!token) {
+      setIsAuth(false);
+    }
+  };
 
   const login = async (loginData: ILoginData) => {
     setError(null);

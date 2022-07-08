@@ -50,6 +50,10 @@ const Router = () => {
             path={routeNames.DELIVERIES}
             element={<DeliveriesPage />}
           />
+          <Route
+            path={`/${routeNames.DELIVERIES}/:id`}
+            element={<DeliveriesPage />}
+          />
         </Route>
       </Route>
       <Route

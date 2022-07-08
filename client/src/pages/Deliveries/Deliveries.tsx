@@ -6,6 +6,7 @@ import {
   Dimmer,
   Loader,
   SemanticICONS,
+  Header,
 } from 'semantic-ui-react';
 
 import { saveAs } from 'file-saver';
@@ -28,8 +29,17 @@ import {
   experiences,
   skills,
 } from '../../services/data';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+import { routeNames } from '../../routes/routes';
 
 const Deliveries: React.FC = () => {
+  const navigator = useNavigate();
+  const params = useParams();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [regionData, setRegionData] = useState<IRegion[]>([]);
   const [organizationData, setOrganizationData] = useState([]);
@@ -63,6 +73,19 @@ const Deliveries: React.FC = () => {
       time: 5000,
     });
   };
+
+  useEffect(() => {
+    if (!params.id) {
+      setCurrentRegion(null);
+    }
+
+    if (regionData && params.id) {
+      const region = regionData.find((r) => r.p00 === params.id);
+      if (region) {
+        setCurrentRegion(region);
+      }
+    }
+  }, [params, regionData]);
 
   const loadOrganizationData = async () => {
     if (!currentRegion) {
@@ -126,8 +149,10 @@ const Deliveries: React.FC = () => {
     setModalVisible(false);
   };
 
-  const handleRegionChange = (region) => {
+  const handleRegionChange = (region: IRegion) => {
     setCurrentRegion(region);
+    const url = `${routeNames.DELIVERIES}/${region.p00}`;
+    navigator(url);
   };
 
   const handleDeleteItem = async (ids: string[]) => {
@@ -223,7 +248,8 @@ const Deliveries: React.FC = () => {
           data={regionData}
           activeItem={currentRegion}
         />
-        <div style={{ width: '100%' }}>
+        {/* <div style={{ width: '100%' }}> */}
+        {currentRegion ? (
           <DeliveriesTable
             data={organizationData}
             onAddItem={() => setModalVisible(true)}
@@ -233,13 +259,36 @@ const Deliveries: React.FC = () => {
             onSaveFile={handleSaveFile}
             currentRegion={currentRegion}
           />
-        </div>
+        ) : (
+          <div
+            style={{
+              width: '80%',
+              height: '100%',
+              position: 'relative',
+            }}
+          >
+            <Header
+              as="h2"
+              style={{
+                width: '100%',
+                textAlign: 'center',
+                // position: 'absolute',
+                // top: '50%',
+                transform: 'translate(0, -50%)',
+                marginTop: '10%',
+              }}
+            >
+              Выберите регион из списка
+            </Header>
+          </div>
+        )}
+
+        {/* </div> */}
 
         <OrganizationModal
           visible={modalVisible}
           onClose={handleModalClose}
           onSubmit={handleModalSubmit}
-          regionsData={regionData}
         />
       </div>
     </div>

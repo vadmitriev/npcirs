@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Menu,
@@ -9,13 +9,22 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 
 import { privateRoutes } from '../../routes/routes';
+import { useMediaQuery } from 'react-responsive';
 
 interface SidebarProps {
   isOpen: boolean;
+  toggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
   const location = useLocation();
+  const isDesktop = useMediaQuery({ query: '(min-width: 1224px)' });
+
+  useEffect(() => {
+    if (!isDesktop && isOpen) {
+      toggle();
+    }
+  }, [isDesktop]);
 
   return (
     <UISidebar

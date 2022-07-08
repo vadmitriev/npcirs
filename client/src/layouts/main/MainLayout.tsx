@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   ErrorBoundary,
@@ -6,15 +6,16 @@ import {
   Sidebar as CustomSidebar,
 } from '../../components';
 import { Sidebar } from 'semantic-ui-react';
-import 'react-semantic-toasts/styles/react-semantic-alert.css';
 
-import './MainLayout.css';
 import { SemanticToastContainer } from 'react-semantic-toasts';
-import useMediaQuery from '../../hooks/useMediaQuery';
+import { useMediaQuery } from 'react-responsive';
+
+import 'react-semantic-toasts/styles/react-semantic-alert.css';
+import './MainLayout.css';
 
 const MainLayout: React.FC = () => {
-  const matches = useMediaQuery('(min-width: 768px)');
-  const [isOpen, setIsOpen] = useState<boolean>(matches);
+  const isDesktop = useMediaQuery({ query: '(min-width: 1224px)' });
+  const [isOpen, setIsOpen] = useState<boolean>(isDesktop);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -26,12 +27,10 @@ const MainLayout: React.FC = () => {
         <Header toggleSidebar={toggleSidebar} />
 
         <Sidebar.Pushable>
-          <CustomSidebar isOpen={isOpen} />
-          {/* <Sidebar.Pusher> */}
+          <CustomSidebar isOpen={isOpen} toggle={toggleSidebar} />
           <div className="page">
             <Outlet />
           </div>
-          {/* </Sidebar.Pusher> */}
         </Sidebar.Pushable>
         <SemanticToastContainer
           position="bottom-right"
