@@ -11,6 +11,7 @@ import { IOrganization } from '../../interfaces/Organization';
 
 import isInn from 'is-inn-js';
 import { IRegion } from '../../interfaces/Region';
+import { isNumeric } from '../../utils/validation';
 
 interface OrganizationModalProps {
   regionsData: IRegion[];
@@ -119,7 +120,7 @@ const OrganizationModal: React.FC<OrganizationModalProps> = ({
   };
 
   const handleOnlyNumbers = (event) => {
-    if (!/[0-9]/.test(event.key)) {
+    if (isNumeric(event.key)) {
       event.preventDefault();
     }
   };

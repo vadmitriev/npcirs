@@ -5,6 +5,7 @@ import { RegionDto } from './dto/region.dto';
 import { REGION_REPOSITORY } from 'src/core/constants';
 import { Op, where, fn, col } from 'sequelize';
 import { ID_COL_NAME } from './constants';
+
 @Injectable()
 export class RegionsService {
   defaultQuery: IRegionQuery = {

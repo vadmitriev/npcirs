@@ -15,6 +15,7 @@
     "@sencha/ext-modern-theme-material": "^7.5.1",
     "@sencha/ext-react-modern": "^7.3.0",
     "axios": "^0.27.2",
+    "docx": "^7.4.0",
     "file-saver": "^2.0.5",
     "is-inn-js": "^1.1.0",
     "react": "^16.13.1",

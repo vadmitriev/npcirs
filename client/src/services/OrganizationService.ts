@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios';
 const formUrl = (regionId: string, id?: string) => {
   let url = `/regions/${regionId}/organization`;
   if (id) {
-    return `${url}/${id};`;
+    return `${url}/${id}`;
   }
   return url;
 };

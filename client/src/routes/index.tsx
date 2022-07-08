@@ -43,16 +43,6 @@ const Router = () => {
     <Routes>
       <Route path={routeNames.LOGIN} element={<LoginPage />} />
       <Route path={routeNames.SIGNUP} element={<SignUpPage />} />
-      {authRoutes.map((route) => {
-        const Element = route.element;
-        return (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={<Element />}
-          />
-        );
-      })}
       <Route element={<RequireAuth />}>
         <Route element={<MainLayout />}>
           <Route path={routeNames.MAIN} element={<DashboardPage />} />
@@ -60,16 +50,6 @@ const Router = () => {
             path={routeNames.DELIVERIES}
             element={<DeliveriesPage />}
           />
-          {/* {privateRoutes.map((route) => {
-            const Element = route.element;
-            return (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={<Element />}
-              />
-            );
-          })} */}
         </Route>
       </Route>
       <Route

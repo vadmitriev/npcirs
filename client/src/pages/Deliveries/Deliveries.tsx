@@ -17,8 +17,17 @@ import {
   OrganizationModal,
   RegionsList,
 } from '../../components';
+
 import { IOrganization } from '../../interfaces/Organization';
 import { IRegion } from '../../interfaces/Region';
+import DocumentCreator from '../../packages/DocumentCreator';
+import { Packer } from 'docx';
+import {
+  achievements,
+  education,
+  experiences,
+  skills,
+} from '../../services/data';
 
 const Deliveries: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -159,8 +168,15 @@ const Deliveries: React.FC = () => {
       return;
     }
     setIsLoading(true);
-    RegionService.loadWord(currentRegion.p00)
-      .then((res) => {
+
+    const documentCreator = new DocumentCreator();
+    const table = documentCreator.create(
+      currentRegion,
+      organizationData,
+    );
+
+    Packer.toBlob(table)
+      .then((blob) => {
         setIsLoading(false);
 
         const fileName = `${
@@ -169,7 +185,7 @@ const Deliveries: React.FC = () => {
           .toISOString()
           .slice(0, 10)}.docx`;
 
-        saveAs(res.data, fileName);
+        saveAs(blob, fileName);
       })
       .catch((err) => {
         setIsLoading(false);

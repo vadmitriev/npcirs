@@ -11,8 +11,10 @@ import {
 
 import { IOrganization } from '../../interfaces/Organization';
 
-import './DeliveriesTable.css';
 import { IRegion } from '../../interfaces/Region';
+import isInn from 'is-inn-js';
+
+import './DeliveriesTable.css';
 
 declare let Ext: any;
 
@@ -94,7 +96,14 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'inn',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+            validator: function (value) {
+              return isInn(value) || 'Неправильный формат ИНН';
+            },
+          },
         },
       ],
     },
@@ -107,14 +116,22 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'plazma_max',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'plazma_cena',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
       ],
     },
@@ -127,14 +144,22 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'erm_max',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'erm_cena',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
       ],
     },
@@ -147,14 +172,22 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'immg_max',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'immg_cena',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
       ],
     },
@@ -167,14 +200,22 @@ const DeliveriesTable: React.FC<DeliveriesTableProps> = ({
           dataIndex: 'alb_max',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
         {
           text: 'Цена (тыс. руб. за один литр)',
           dataIndex: 'alb_cena',
           editable: true,
           draggable: false,
-          format: 'number',
+          editor: {
+            xtype: 'numberfield',
+            allowBlank: false,
+            flex: 1,
+          },
         },
       ],
     },

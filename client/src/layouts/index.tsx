@@ -1,1 +1,5 @@
-export { default as MainLayout } from './main/MainLayout';
+import MainLayout from './main/MainLayout';
+
+export default {
+  MainLayout,
+};

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   ErrorBoundary,
@@ -10,9 +10,11 @@ import 'react-semantic-toasts/styles/react-semantic-alert.css';
 
 import './MainLayout.css';
 import { SemanticToastContainer } from 'react-semantic-toasts';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 const MainLayout: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const matches = useMediaQuery('(min-width: 768px)');
+  const [isOpen, setIsOpen] = useState<boolean>(matches);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -25,11 +27,11 @@ const MainLayout: React.FC = () => {
 
         <Sidebar.Pushable>
           <CustomSidebar isOpen={isOpen} />
-          <Sidebar.Pusher>
-            <div className="page">
-              <Outlet />
-            </div>
-          </Sidebar.Pusher>
+          {/* <Sidebar.Pusher> */}
+          <div className="page">
+            <Outlet />
+          </div>
+          {/* </Sidebar.Pusher> */}
         </Sidebar.Pushable>
         <SemanticToastContainer
           position="bottom-right"

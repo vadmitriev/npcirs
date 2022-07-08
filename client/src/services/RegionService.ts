@@ -12,8 +12,4 @@ export default class RegionService {
   ): Promise<AxiosResponse<IRegion>> {
     return api.post('/regions', data);
   }
-
-  static async loadWord(id: string) {
-    return api.get(`/regions/${id}/word`, { responseType: 'blob' });
-  }
 }
