@@ -4,6 +4,8 @@ import { Sequelize } from 'sequelize-typescript';
 import { User } from 'src/modules/users/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
 import { databaseConfig } from './database.config';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export const databaseProviders = [
   {
@@ -23,8 +25,15 @@ export const databaseProviders = [
         default:
           config = databaseConfig.development;
       }
-      config.define = { schema: ['minzdrav', 'public'] };
       const sequelize = new Sequelize(config);
+
+      const init_sql = fs.readFileSync(
+        path.resolve('src', 'assets', 'db', 'init.sql'),
+        'utf-8',
+      );
+
+      await sequelize.query(init_sql);
+
       sequelize.addModels([User, Region, Organization]);
       await sequelize.sync();
       return sequelize;

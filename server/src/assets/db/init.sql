@@ -1,4 +1,4 @@
-﻿DO
+DO
 $do$
 BEGIN
 	IF EXISTS (SELECT FROM pg_database WHERE datname = 'KPIS') THEN
@@ -67,6 +67,8 @@ DO
 $do$
 BEGIN
    IF (SELECT count(*) FROM "public"."r1022") = 0  THEN
+
+
 INSERT INTO "public"."r1022" ("p00", "p01", "utv", "p02", "sp")
 VALUES ('0100000000', 'Алтайский край', '0', 'Алтайского края', '0');
 
@@ -7976,5 +7978,3 @@ VALUES ('6732000000', 'Качинский муниципальный округ,
 	END IF;
 END
 $do$;
-
-
