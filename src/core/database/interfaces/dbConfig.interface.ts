@@ -6,7 +6,7 @@ export interface IDatabaseConfigAttributes {
   port?: string;
   dialect?: string;
   urlDatabase?: string;
-  ssl: boolean;
+  ssl: { require: boolean; rejectUnauthorized: boolean };
 }
 
 export interface IDatabaseConfig {
