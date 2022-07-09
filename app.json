@@ -6,7 +6,7 @@
   "logo": "",
   "success_url": "/",
   "scripts": {
-    "predeploy": "npm install && npm run build"
+    "predeploy": "cd server && npm install && npm run build"
   },
   "env": {
     "NODE_ENV": {
