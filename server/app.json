@@ -1,0 +1,29 @@
+{
+  "name": "npcirs",
+  "description": "Fullstack application with nestjs, postgres, react",
+  "website": "https://github.com/vadmitriev/npcirs",
+  "repository": "https://github.com/vadmitriev/npcirs",
+  "logo": "",
+  "success_url": "/",
+  "scripts": {
+    "predeploy": "npm install && npm run build"
+  },
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment [production/development]",
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "image": "heroku/nodejs",
+  "addons": ["heroku-postgresql"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

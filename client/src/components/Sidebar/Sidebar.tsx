@@ -38,17 +38,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
       width="thin"
       style={{ maxWidth: '110px', marginRight: '5%' }}
     >
-      {privateRoutes.map((route) => (
-        <Menu.Item
-          key={route.path}
-          as={Link}
-          to={route.path}
-          active={location.pathname === route.path}
-        >
-          <Icon name={route.icon as SemanticICONS} />
-          {route.name}
-        </Menu.Item>
-      ))}
+      {privateRoutes.map((route) => {
+        const isActive =
+          location.pathname === route.path ||
+          (route.path.length > 1 &&
+            location.pathname.includes(route.path));
+
+        return (
+          <Menu.Item
+            key={route.path}
+            as={Link}
+            to={route.path}
+            active={isActive}
+          >
+            <Icon name={route.icon as SemanticICONS} />
+            {route.name}
+          </Menu.Item>
+        );
+      })}
     </UISidebar>
   );
 };

@@ -8,6 +8,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "precommit": "lint-staged"
   },
   "dependencies": {

@@ -18,7 +18,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: true,
     methods: ['GET', 'POST', 'DELETE', 'PUT'],
     credentials: true,
   });
@@ -27,6 +27,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidateInputPipe({ disableErrorMessages: false }));
 
-  await app.listen(5000);
+  await app.listen(process.env.PORT || 5000);
 }
 bootstrap();

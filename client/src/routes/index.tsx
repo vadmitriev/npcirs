@@ -57,6 +57,10 @@ const Router = () => {
         </Route>
       </Route>
       <Route
+        path="/error"
+        element={<NotFoundPage text="Произошла ошибка" />}
+      />
+      <Route
         path="*"
         element={<NotFoundPage text="Страница не найдена" />}
       />

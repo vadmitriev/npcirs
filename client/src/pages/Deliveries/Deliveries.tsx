@@ -110,6 +110,7 @@ const Deliveries: React.FC = () => {
       .catch((err) => {
         console.log(err);
         showToast('Произошла ошибка');
+        navigator(routeNames.ERROR);
       })
       .finally(() => setIsLoading(false));
   }, []);

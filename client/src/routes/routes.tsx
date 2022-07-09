@@ -10,6 +10,7 @@ export enum routeNames {
   SIGNUP = '/signup',
   MAIN = '/',
   DELIVERIES = '/deliveries',
+  ERROR = "/error",
 }
 
 interface IRoute {
