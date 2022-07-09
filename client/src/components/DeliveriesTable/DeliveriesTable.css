@@ -1,0 +1,9 @@
+.x-gridcolumn .x-text-el {
+	white-space: normal;
+	text-align: center;
+}
+
+.table-wrapper {
+	margin-left: 20px;
+	position: relative;
+}

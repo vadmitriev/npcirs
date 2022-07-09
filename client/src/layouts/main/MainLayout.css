@@ -1,0 +1,11 @@
+.main-layout {
+	height: 100vh;
+}
+
+.page {
+	padding: 1rem 5rem 2rem 10%;
+}
+
+.pushable {
+	height: 100vh;
+}

@@ -1,0 +1,7 @@
+.ui.form .field .prompt.label {
+	display: none !important;
+}
+
+.ui.form .field .prompt.label::before {
+	content: none !important;
+}
